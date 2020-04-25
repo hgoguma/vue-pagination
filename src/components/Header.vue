@@ -10,10 +10,3 @@
         </b-collapse>
     </b-navbar>
 </template>
-
-<script>
-
-export default {
-    
-}
-</script>
