@@ -22,5 +22,15 @@
 <script>
 export default {
     props: ['movieData'],
+    created() {
+        this.setList();
+    },
+    methods: {
+        setList() {
+            console.log('setList!');
+            
+            console.log('after setList', this.movieData.poster_path);
+        }
+    }
 }
 </script>
