@@ -1,10 +1,6 @@
-
-const fetchData = () => {
+const fetchData = (pageIndex = 1) => {
     //페이지 옵션 page index, pagesize 등등 설정하기 -> parameter
-    
-    console.log('fetchData func!');
-    //console.log('pageIndex', pageIndex);
-
+    console.log('fetchData func!', pageIndex);
     //let results = []; //20개 들어있는 배열
     let resultArray = [
         [{"id":181812,"original_title":"Star Wars: The Rise of Skywalker","poster_path":"/opENUWyvrxvsXrRM3qq4wmJDCo2.jpg","title":"스타워즈: 라이즈 오브 스카이워커"},
@@ -33,24 +29,19 @@ const fetchData = () => {
         "pagination": {
             "total": 100,
             "per_page": 20,
-            "current_page": 1,
+            "current_page": pageIndex,
             "last_page": 200,
             "from": 751,
             "to": 800,
         }
     }
 
-    // if(!pageIndex%2) { //들어온 index가 홀수일 때
-    //     dummyData.results = resultArray[0] 
-    // } else {
-    //     dummyData.results = resultArray[1] 
-    // }
-    
-    dummyData.results = resultArray[0];
-    //console.log('dummydata?', dummyData);
-
-    
-
+    if(pageIndex%2) { //들어온 index가 홀수일 때
+        dummyData.results = resultArray[0] 
+    } else {
+        dummyData.results = resultArray[1] 
+    }
+        
     return dummyData;
 }
 
