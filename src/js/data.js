@@ -43,8 +43,8 @@ const fetchData = (currentPageIndex, pageOption) => {
 
     console.log('endPage??????', endPage);
     
-    let startPage = endPage-(pageOption.pageCount-1);
-
+    //let startPage = endPage-(pageOption.pageCount-1);
+    let startPage = ((currentPageIndex - 1) / pageOption.pageCount) * pageOption.pageCount + 1;
     console.log('startPage??????', startPage);
 
 

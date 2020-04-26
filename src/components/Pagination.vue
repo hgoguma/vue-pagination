@@ -13,7 +13,7 @@
             <!--이전 페이지 범위 이동 -->
             <div v-if="hasPrevPage">
                 <li class="page-item">
-                    <button type="button" tabindex="1" aria-controls="my-list" class="page-link" @click="loadPrevPage()">이전...</button>
+                    <button type="button" tabindex="1" aria-controls="my-list" class="page-link" @click="loadPrevPage()">...</button>
                 </li>
             </div>
 
@@ -63,6 +63,9 @@ export default {
             //이전 페이지로 바꾸는 버튼 활성화
             if(oldVal.length != 0 && newVal.length) {
                 this.hasPrevPage = true;
+            }
+            if(newVal[0] === 1) {
+                this.hasPrevPage = false;
             }
         },
     },
@@ -136,17 +139,12 @@ export default {
         },
         loadPrevPage() {
             console.log('loadPrevPage!!');
-            console.log('현재 페이지의 첫번째 인덱스?', this.pagination.startPage);
             this.currentPageIndex = this.pagination.startPage - this.pagination.pageOption.pageCount;
-            console.log('바뀐 페이지?', this.currentPageIndex);
             this.$emit('changePage', this.currentPageIndex);
             let endPage = (Math.ceil(this.currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
             let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
             //시작 페이지 던져주기
             this.setPagination(startPage);
-
-            console.log('새로운 페이지의 첫번째?', startPage);
-            //this.setPagination()
         }
     }
 }
