@@ -10,21 +10,28 @@
                 <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="prevPage(e)">‹</button>
             </li>
 
-            <!--페이지 보여주기-->
-            <div v-for="(pageIndex, index) in pageNum" v-bind:key="index">
-                <div v-if="pageIndex <= pageRange">
-                    <li class="page-item" :class="{ 'active' : pageIndex === currentPageIndex }">
-                        <button type="button" aria-controls="my-list" aria-checked="true" tabindex="0" class="page-link" @click="changePage(pageIndex)">{{pageIndex}}</button>
-                    </li>
-                </div>
+            <!--이전 페이지 범위 이동 -->
+            <div v-if="hasPrevPage">
+                <li class="page-item">
+                    <button type="button" tabindex="1" aria-controls="my-list" class="page-link" @click="loadPrevPage()">이전...</button>
+                </li>
+            </div>
+
+            <!--페이지 범위 보여주기-->
+            <div v-for="(pageIndex, index) in displayPageArray" v-bind:key="index">
+                <li class="page-item" :class="{ 'active' : pageIndex === currentPageIndex }">
+                    <button type="button" aria-controls="my-list" aria-checked="true" tabindex="0" class="page-link" @click="changePage(pageIndex)">{{pageIndex}}</button>
+                </li>
             </div>
 
             <!-- 페이지 더 보여주기 -->
             <div v-if="hasMorePage">
                 <li class="page-item">
-                    <button type="button" tabindex="+1" aria-controls="my-list" class="page-link" @click="morePage()">...</button>
+                    <button type="button" tabindex="+1" aria-controls="my-list" class="page-link" @click="loadMorePage()">...</button>
                 </li>
             </div>
+
+            
 
             <li class="page-item">
                 <button type="button" tabindex="+1" aria-controls="my-list" class="page-link" @click="nextPage(e)">›</button>
@@ -41,60 +48,70 @@ export default {
     data() {
         return {
             currentPageIndex : '',
-            totalPage : '', //총 페이지 수
-            pageRange : 5, //먼저 보여줄 페이지 개수
-            listCount : 10, //한 페이지당 보여줄 데이터 개수
-            pageNum : [], //총 페이지 개수 만큼 배열
+            pageCount : 5, //먼저 보여줄 페이지 개수
+            dataPerPage : 10, //한 페이지당 보여줄 데이터 개수
+            displayPageArray : [],
             hasMorePage : false,
-            startPage : '', 
-            endPage : '',
+            hasPrevPage : false,
+            displayPageNumValArray : [],
         }
     },
+    watch : {
+        displayPageNum(newVal, oldVal) {
+            console.log('setHasMorePage!');
+            console.log('new', newVal);
+            console.log('old', oldVal);
+            //첫번째 페이지 범위가 아니고 && 새로 보여질 범위 보다 뿌릴 페이지 범위가 클 때
+            if(oldVal.length != 0 && newVal.length < this.pageCount) {
+                this.hasMorePage = false;
+            }
+            //이전 페이지로 바꾸는 버튼 활성화
+            if(oldVal.length != 0 && newVal.length) {
+                this.hasPrevPage = true;
+            }
+            this.displayPageNumValArray.push(newVal, oldVal);
+        },
+        
+    },
     created(){
-        this.setPagination();
+        this.currentPageIndex = 1;
+        this.setPagination(1);
     },
     methods: {
-        setPagination() {
-            //총 페이지 개수 구하기
-            this.totalPage = Math.floor(this.pagination.total / this.pagination.per_page);
-            if(this.pagination.total % this.pagination.per_page > 0 ){
-                this.totalPage++;
+        setPagination(startPage) {
+            this.displayPageArray = [];
+            console.log('setPagination!!');
+            console.log('들어온 값', startPage);
+            for(let i = 0; i < this.pagination.pageOption.pageCount; i++) {
+                let pageIndex = startPage + i;
+                if(pageIndex > this.pagination.totalPage) {
+                    break;
+                }
+                this.displayPageArray.push(pageIndex);
             }
-            //페이지 개수 만큼 배열 만들기 -> for 문 돌면서 li 태그 만듦
-            for(var i = 0; i <this.totalPage; i++) {
-                this.pageNum.push(i + 1);
-            }
-            //첫번째 페이지로 설정
-            this.currentPageIndex = 1;
-            
-            //hasMorePage 설정
-            if(this.pageNum.length > this.pageRange) {
+            if(this.pagination.totalPage > this.displayPageArray[this.displayPageArray.length -1 ]) {
                 this.hasMorePage = true;
             }
-            //pageRange 설정
-            this.setPageRange(this.currentPageIndex);
-        },
-        setPageRange(currentPageIndex){
-            //현재 페이지를 기준으로 start Page, end Page 설정하기
-            this.endPage = (Math.ceil(currentPageIndex / this.pageRange) * this.pageRange);
-            this.startPage = (this.endPage - this.pageRange)+1;
-            console.log('endPage?', this.endPage);
-            console.log('startPage?', this.startPage);
+            if(this.pagination.totalPage === this.displayPageArray[this.displayPageArray.length -1 ]) {
+                this.hasMorePage = false;
+            }
+            this.currentPageIndex = startPage;
         },
         changePage(pageIndex) {
             this.currentPageIndex = pageIndex; //현재 보고 있는 페이지 바꿔주기
             this.$emit('changePage', this.currentPageIndex);
         },
         firstPage(e) {
-            this.currentPageIndex = this.pageNum[0];
-            this.$emit('changePage', this.currentPageIndex);
-            if(this.currentPageIndex === this.pageNum[0] ){
+            if(this.currentPageIndex === 1){
                 e.preventDefault();
                 return;
             }
+            this.currentPageIndex = 1;
+            this.$emit('changePage', this.currentPageIndex);
+            this.setPagination(this.currentPageIndex);
         },
         prevPage(e) {
-            if(this.currentPageIndex === this.pageNum[0] ){
+            if(this.currentPageIndex === 1){
                 e.preventDefault();
                 return;
             }
@@ -110,21 +127,30 @@ export default {
             this.$emit('changePage', this.currentPageIndex);
         },
         lastPage(e) {
-            this.currentPageIndex = this.pageNum[this.pageNum.length-1];
+            this.currentPageIndex = this.pagination.totalPage;
+            //시작 페이지 던져주기
+            //console.log('마지막 페이지의 시작은?', this.displayPageArray[0]);
             this.$emit('changePage', this.currentPageIndex);
-            if(this.currentPageIndex === this.pageNum[this.pageNum.length-1]){
+            console.log('다녀옴!');
+
+            let endPage = (Math.ceil(this.currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
+            let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
+
+            console.log('시작 페이지?', startPage);
+            this.setPagination(startPage);
+            if(this.currentPageIndex === this.pagination.totalPage){
                 e.preventDefault();
                 return;
             }
         },
-        morePage() {
-            //페이지 처리 된 부분 123 -> 45로 보여주기
-            this.setPageRange(this.currentPageIndex);
+        loadMorePage() {
+            //페이지 그룹 바꾸기
+            this.$emit('morePage', this.pagination.endPage + 1);
+            this.setPagination(this.pagination.endPage + 1);
 
-            //... 페이지 보여주기
-
-            //만약에 더 보여줄 페이지가 있으면 morePage 계속 보여줘야됨,,,
-
+        },
+        loadPrevPage() {
+            console.log('loadPrevPage!!');
         }
     }
 }

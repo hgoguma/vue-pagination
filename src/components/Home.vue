@@ -8,7 +8,7 @@
 
         <!-- Pagination -->
         <b-container class="text-center">
-            <Pagination :pagination="pagination" @changePage="changePage" />
+            <Pagination :pagination="pagination" @changePage="changePage" @morePage="morePage" />
         </b-container>
     </div>
 </template>
@@ -30,26 +30,36 @@ export default {
   data() {
     return {
         movieData : [],
+        pagination : [],
+        pageOption : {
+          pageCount : 5,
+          dataPerPage : 10
+        }
     }
   },
   created() {
-    this.fetchDataFromJs();
-    //this.setList();
+    this.fetchDataFromJs(1);
   },
   methods : {
-      fetchDataFromJs(pageIndex = 1) {
+      fetchDataFromJs(currentPageIndex) {
+        console.log('데이터 가져오기!');
         //pagination 데이터 가져오기
-        let data = fetchData(pageIndex);
+        let data = fetchData(currentPageIndex, this.pageOption);
         this.pagination = data.pagination;
+        console.log('페이지네이션?', this.pagination);
         this.movieData = data.results;
         let poster_path = data.results.map(element => element.poster_path = 'https://image.tmdb.org/t/p/w500' + element.poster_path);
         this.movieData.poster_path = poster_path;
       },
-      changePage(pageIndex) {
-        console.log('부모 changePage!', pageIndex);
+      changePage(currentPageIndex) {
+        console.log('changePage 부모!', currentPageIndex);
         //기존 데이터 비우기
         this.movieData = [];
-        this.fetchDataFromJs(pageIndex);
+        this.fetchDataFromJs(currentPageIndex);
+      },
+      morePage(nextPageIndex) {
+        console.log('morePage!!!', nextPageIndex);
+        this.fetchDataFromJs(nextPageIndex);
       }
     
   }
