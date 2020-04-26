@@ -28,26 +28,33 @@ const fetchData = (currentPageIndex, pageOption) => {
     //초기화
 
     let totalData = 138;
-    let totalPage = 0;
-    let pageGroup = 0;
-    let startPage = 0;
-    let endPage = 0;
     let pageIndexArray = [];
-
-    console.log('현재 페이지?', currentPageIndex);
     
     //총 몇개의 페이징 처리가 필요한지 계산
-    totalPage = Math.ceil(totalData/pageOption.dataPerPage);
+    let totalPage = Math.ceil(totalData/pageOption.dataPerPage);
 
     //현재 페이지를 기준으로 페이지 그룹 구하기
-    pageGroup = Math.ceil(currentPageIndex/pageOption.pageCount);
+    let pageGroup = Math.ceil(currentPageIndex/pageOption.pageCount);
 
-    endPage = pageGroup * pageOption.pageCount; //화면에 보여질 마지막 페이지 번호
+    let endPage = pageGroup * pageOption.pageCount; //화면에 보여질 마지막 페이지 번호
     if(endPage > totalPage) {
         endPage = totalPage;
     }
 
-    startPage = endPage - (pageOption.pageCount - 1);
+    console.log('endPage??????', endPage);
+    
+    let startPage = endPage-(pageOption.pageCount-1);
+
+    console.log('startPage??????', startPage);
+
+
+    for(let i = 0; i < totalPage; i++) {
+        pageIndexArray.push(i+1);
+    }
+
+    if(totalPage < 1) {
+        startPage = endPage;
+    }
 
     if(currentPageIndex % 2) {
         resultArray = resultArray[0];
@@ -55,9 +62,7 @@ const fetchData = (currentPageIndex, pageOption) => {
         resultArray = resultArray[1];
     }
 
-    for(let i = 0; i < totalPage; i++) {
-        pageIndexArray.push(i+1);
-    }
+    
 
     console.log('데이터?', resultArray);
 

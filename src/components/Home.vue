@@ -8,7 +8,7 @@
 
         <!-- Pagination -->
         <b-container class="text-center">
-            <Pagination :pagination="pagination" @changePage="changePage" @morePage="morePage" />
+            <Pagination :pagination="pagination" @changePage="changePage" />
         </b-container>
     </div>
 </template>

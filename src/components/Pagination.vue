@@ -53,25 +53,18 @@ export default {
             displayPageArray : [],
             hasMorePage : false,
             hasPrevPage : false,
-            displayPageNumValArray : [],
         }
     },
     watch : {
-        displayPageNum(newVal, oldVal) {
+        displayPageArray(newVal, oldVal) {
             console.log('setHasMorePage!');
             console.log('new', newVal);
-            console.log('old', oldVal);
-            //첫번째 페이지 범위가 아니고 && 새로 보여질 범위 보다 뿌릴 페이지 범위가 클 때
-            if(oldVal.length != 0 && newVal.length < this.pageCount) {
-                this.hasMorePage = false;
-            }
+            console.log('old', oldVal);            
             //이전 페이지로 바꾸는 버튼 활성화
             if(oldVal.length != 0 && newVal.length) {
                 this.hasPrevPage = true;
             }
-            this.displayPageNumValArray.push(newVal, oldVal);
         },
-        
     },
     created(){
         this.currentPageIndex = 1;
@@ -80,7 +73,6 @@ export default {
     methods: {
         setPagination(startPage) {
             this.displayPageArray = [];
-            console.log('setPagination!!');
             console.log('들어온 값', startPage);
             for(let i = 0; i < this.pagination.pageOption.pageCount; i++) {
                 let pageIndex = startPage + i;
@@ -95,7 +87,6 @@ export default {
             if(this.pagination.totalPage === this.displayPageArray[this.displayPageArray.length -1 ]) {
                 this.hasMorePage = false;
             }
-            this.currentPageIndex = startPage;
         },
         changePage(pageIndex) {
             this.currentPageIndex = pageIndex; //현재 보고 있는 페이지 바꿔주기
@@ -119,7 +110,7 @@ export default {
             this.$emit('changePage', this.currentPageIndex);
         },
         nextPage(e) {
-            if(this.currentPageIndex === this.pageNum[this.pageNum.length-1]){
+            if(this.currentPageIndex === this.pagination.totalPage){
                 e.preventDefault();
                 return;
             }
@@ -128,15 +119,10 @@ export default {
         },
         lastPage(e) {
             this.currentPageIndex = this.pagination.totalPage;
-            //시작 페이지 던져주기
-            //console.log('마지막 페이지의 시작은?', this.displayPageArray[0]);
             this.$emit('changePage', this.currentPageIndex);
-            console.log('다녀옴!');
-
             let endPage = (Math.ceil(this.currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
             let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
-
-            console.log('시작 페이지?', startPage);
+            //시작 페이지 던져주기
             this.setPagination(startPage);
             if(this.currentPageIndex === this.pagination.totalPage){
                 e.preventDefault();
@@ -144,13 +130,23 @@ export default {
             }
         },
         loadMorePage() {
-            //페이지 그룹 바꾸기
-            this.$emit('morePage', this.pagination.endPage + 1);
-            this.setPagination(this.pagination.endPage + 1);
-
+            this.currentPageIndex = this.pagination.endPage + 1;
+            this.$emit('changePage', this.currentPageIndex);
+            this.setPagination(this.currentPageIndex);
         },
         loadPrevPage() {
             console.log('loadPrevPage!!');
+            console.log('현재 페이지의 첫번째 인덱스?', this.pagination.startPage);
+            this.currentPageIndex = this.pagination.startPage - this.pagination.pageOption.pageCount;
+            console.log('바뀐 페이지?', this.currentPageIndex);
+            this.$emit('changePage', this.currentPageIndex);
+            let endPage = (Math.ceil(this.currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
+            let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
+            //시작 페이지 던져주기
+            this.setPagination(startPage);
+
+            console.log('새로운 페이지의 첫번째?', startPage);
+            //this.setPagination()
         }
     }
 }
