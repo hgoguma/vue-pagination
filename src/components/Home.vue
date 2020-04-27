@@ -9,7 +9,7 @@
         <List :movieData="movieData" />
        
         <!-- Pagination -->
-        <Pagination v-if="this.pageOption != null"  :totalData="totalData" :pageOption="this.pageOption" @changePage="changePage" />
+        <Pagination v-if="this.pageOption != null"  :totalData="this.totalData" :pageOption="this.pageOption" @changePage="changePage" />
     </div>
 </template>
 

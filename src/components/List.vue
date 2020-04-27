@@ -21,7 +21,12 @@
 
 <script>
 export default {
-    props: ['movieData'],
+    props: {
+        movieData : {
+            required : true,
+            type : Array
+        }
+    },
     
 }
 </script>

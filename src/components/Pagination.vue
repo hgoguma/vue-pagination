@@ -49,7 +49,16 @@
 <script>
 
 export default {
-    props: ['totalData', 'pageOption'],
+    props: {
+        totalData : {
+            required : true,
+            type : Number
+        },
+        pageOption : {
+            required : true,
+            type : Object
+        }
+    },
     data() {
         return {
             currentPageIndex : 1,
