@@ -1,5 +1,5 @@
 <template>
-    <div class="overflow-auto">
+    <div class="overflow-auto" v-bind="pagination">
         <ul aria-disabled="false" aria-label="Pagination" class="pagination b-pagination justify-content-center">
             <!-- 첫페이지로 버튼-->
             <li class="page-item">
@@ -50,13 +50,9 @@ export default {
     data() {
         return {
             currentPageIndex : '',
-            pageCount : 5, //먼저 보여줄 페이지 개수
-            dataPerPage : 10, //한 페이지당 보여줄 데이터 개수
-            displayPageArray : [],
-            hasMorePage : false,
-            hasPrevPage : false,
-            isFirstPage : false,
-            isLasgPage : false,
+            displayPageArray : [], //실제 보여주는 페이지 범위
+            hasMorePage : false, //더보기 버튼 여부
+            hasPrevPage : false, //이전 더보기 버튼 여부
         }
     },
     watch : {
@@ -75,8 +71,9 @@ export default {
         this.setPagination(1);
     },
     methods: {
+        //페이징 범위 처리하는 함수
         setPagination(startPage) {
-            this.displayPageArray = [];
+            this.displayPageArray = []; 
             for(let i = 0; i < this.pagination.pageOption.pageCount; i++) {
                 let pageIndex = startPage + i;
                 if(pageIndex > this.pagination.totalPage) {
@@ -103,17 +100,19 @@ export default {
         prevPage() {
             this.currentPageIndex--;
             this.$emit('changePage', this.currentPageIndex);
+            let startPage = this.getStartPage(this.currentPageIndex);
+            this.setPagination(startPage);
         },
         nextPage() {
             this.currentPageIndex++;
             this.$emit('changePage', this.currentPageIndex);
+            let startPage = this.getStartPage(this.currentPageIndex);
+            this.setPagination(startPage);
         },
         lastPage() {
             this.currentPageIndex = this.pagination.totalPage;
             this.$emit('changePage', this.currentPageIndex);
-            let endPage = (Math.ceil(this.currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
-            let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
-            //시작 페이지 던져주기
+            let startPage = this.getStartPage(this.currentPageIndex);
             this.setPagination(startPage);
         },
         loadMorePage() {
@@ -122,13 +121,15 @@ export default {
             this.setPagination(this.currentPageIndex);
         },
         loadPrevPage() {
-            console.log('loadPrevPage!!');
             this.currentPageIndex = this.pagination.startPage - this.pagination.pageOption.pageCount;
             this.$emit('changePage', this.currentPageIndex);
-            let endPage = (Math.ceil(this.currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
-            let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
-            //시작 페이지 던져주기
+            let startPage = this.getStartPage(this.currentPageIndex);
             this.setPagination(startPage);
+        },
+        getStartPage(currentPageIndex) {
+            let endPage = (Math.ceil(currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
+            let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
+            return startPage;
         }
     }
 }

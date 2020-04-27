@@ -1,7 +1,7 @@
 <template>
     <div>
         <!--Header-->
-        <Header></Header>
+        <Header />
 
         <!--List-->
         <List id="my-list" :movieData="movieData" />
@@ -29,12 +29,12 @@ export default {
   },
   data() {
     return {
-        movieData : [],
         pagination : [],
         pageOption : {
           pageCount : 5,
           dataPerPage : 10
-        }
+        },
+        movieData : [],
     }
   },
   created() {
