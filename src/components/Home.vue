@@ -4,7 +4,7 @@
         <Header />
          <!--Pagination Option -->
         <PageOption @setPageOption="setPageOption" />
-        
+
         <!--List-->
         <List :movieData="movieData" />
        
@@ -35,9 +35,6 @@ export default {
         pageOption : null,
         movieData : [],
     }
-  },
-  created() {
-    console.log('Home created', this.pageOption);
   },
   methods : {
       fetchDataFromJs(currentPageIndex) {

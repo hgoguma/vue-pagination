@@ -15,7 +15,7 @@
                 <b-form-select v-model="pageOption.dataPerPage" :options="dataPerPageOption" size="sm"></b-form-select>
             </b-col>
             <b-col>
-                <b-button variant="outline-primary" @click="setPageOption()">클릭</b-button>
+                <b-button v-if="!removeClickBtn" variant="outline-primary" @click="setPageOption()">클릭</b-button>
             </b-col>
         </b-row>
     </b-container>
@@ -42,10 +42,12 @@ export default {
                 { value: 15, text: '15' },
                 { value: 20, text: '20' },
             ],
+            removeClickBtn : false,
         }
     },
     methods : {
         setPageOption() {
+            this.removeClickBtn = true;
             this.$emit('setPageOption', this.pageOption);
         }
     }
