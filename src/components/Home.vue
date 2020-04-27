@@ -8,7 +8,7 @@
 
         <!-- Pagination -->
         <b-container class="text-center">
-            <Pagination :pagination="pagination" @changePage="changePage" />
+            <Pagination :totalData="totalData" :pageOption="this.pageOption" @changePage="changePage" />
         </b-container>
     </div>
 </template>
@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-        pagination : [],
+        totalData : 0,
         pageOption : {
           pageCount : 5,
           dataPerPage : 5
@@ -45,12 +45,12 @@ export default {
         //기존 데이터 비우기
         this.movieData = [];
         let data = fetchData(currentPageIndex, this.pageOption);
-        this.pagination = data.pagination;
+        this.totalData = data.totalData;
         let poster_path = data.results.map(element => element.poster_path = 'https://image.tmdb.org/t/p/w500' + element.poster_path); //배열
         data.results.poster_path = poster_path;
         this.movieData = data.results;
       },
-      changePage(currentPageIndex) {        
+      changePage(currentPageIndex) {
         this.fetchDataFromJs(currentPageIndex);
       },
   }

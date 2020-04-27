@@ -31,7 +31,7 @@ const fetchData = (currentPageIndex, pageOption) => {
     }
 
     //데이터를 dataPerPage 만큼 끊어서 새로 배열 만들기
-    let resultArray = [];
+    let resultArray = []; //ex ) [ [1,2,3,4,5], [6,7,8,9,10], [11,12,13] ]...
 
     for(let i = 0; i < Math.ceil(totalData/pageOption.dataPerPage); i++) {
         let k = i * pageOption.dataPerPage;
@@ -42,11 +42,8 @@ const fetchData = (currentPageIndex, pageOption) => {
     //console.log('만들어진 배열?', resultArray);
 
     let dummyData = {
-        "pagination": {
-            "totalData": totalData, //총 데이터 개수
-            "pageOption" : pageOption,
-            "currentPageIndex" : currentPageIndex,
-        },
+        "currentPageIndex" : currentPageIndex,
+        "totalData" : totalData,
         "results" : resultArray[currentPageIndex-1]
     }
         

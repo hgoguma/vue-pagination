@@ -21,7 +21,7 @@
             <!--페이지 범위 보여주기-->
             <div v-for="(pageIndex, index) in displayPageArray" v-bind:key="index">
                 <li class="page-item" :class="{ 'active' : pageIndex === currentPageIndex }">
-                    <button type="button" aria-controls="my-list" aria-checked="true" tabindex="0" class="page-link" @click="changePage(pageIndex)">{{pageIndex}}</button>
+                    <button type="button" aria-controls="my-list" aria-checked="true" tabindex="-1" class="page-link" @click="changePage(pageIndex)">{{pageIndex}}</button>
                 </li>
             </div>
 
@@ -34,19 +34,19 @@
 
              <!-- 다음 페이지-->
             <li class="page-item">
-                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="nextPage()" :disabled="this.currentPageIndex == this.pagination.totalPage? true : false">›</button>
+                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="nextPage()" :disabled="this.currentPageIndex == this.totalPage? true : false">›</button>
             </li>
 
              <!-- 맨 마지막 페이지로 이동-->
             <li class="page-item">
-                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="lastPage()" :disabled="this.currentPageIndex == this.pagination.totalPage? true : false">»</button>
+                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="lastPage()" :disabled="this.currentPageIndex == this.totalPage? true : false">»</button>
             </li>
         </ul>
     </div>
 </template>
 <script>
 export default {
-    props: ['pagination'],
+    props: ['totalData', 'pageOption'],
     data() {
         return {
             currentPageIndex : 1,
@@ -77,7 +77,7 @@ export default {
         //페이징 범위 처리하는 함수
         setPagination(startPage) {
             this.displayPageArray = []; 
-            for(let i = 0; i < this.pagination.pageOption.pageCount; i++) {
+            for(let i = 0; i < this.pageOption.pageCount; i++) {
                 let pageIndex = startPage + i;
                 if(pageIndex > this.totalPage) {
                     break;
@@ -94,8 +94,8 @@ export default {
         //startPage, endPage 구해서 pageRange 배열 만드는 함수
         setPageRange(currentPageIndex) {
             this.pageRange = [];
-            let endPage = (Math.ceil(currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
-            let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
+            let endPage = (Math.ceil(currentPageIndex / this.pageOption.pageCount) * this.pageOption.pageCount);
+            let startPage = (endPage - this.pageOption.pageCount)+1;
             if(endPage > this.totalPage) {
                 endPage = this.totalPage;
             }
@@ -110,7 +110,7 @@ export default {
             this.setPagination(this.pageRange[0]);
         },
         getTotalPage() {
-            this.totalPage = Math.ceil(this.pagination.totalData/this.pagination.pageOption.dataPerPage);
+            this.totalPage = Math.ceil(this.totalData/this.pageOption.dataPerPage);
         },
         //click 이벤트 함수
         changePage(pageIndex) {
@@ -138,7 +138,7 @@ export default {
             this.chagePageAndSetPagination(this.currentPageIndex);
         },
         loadPrevPage() {
-            this.currentPageIndex = this.pageRange[0] - this.pagination.pageOption.pageCount;
+            this.currentPageIndex = this.pageRange[0] - this.pageOption.pageCount;
             this.chagePageAndSetPagination(this.currentPageIndex);
         },
     }
