@@ -1,50 +1,53 @@
 <template>
-    <div class="overflow-auto" v-bind="pagination">
-        <ul aria-disabled="false" aria-label="Pagination" class="pagination b-pagination justify-content-center">
-            <!-- 첫페이지로 버튼-->
-            <li class="page-item">
-                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="firstPage()" :disabled="this.currentPageIndex == 1? true : false">«</button>
-            </li>
-
-            <!-- 이전 페이지 버튼-->
-            <li class="page-item">
-                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="prevPage()" :disabled="this.currentPageIndex == 1? true : false">‹</button>
-            </li>
-
-            <!--이전 페이지 범위로 이동 -->
-            <div v-if="hasPrevPage">
+    <b-container class="text-center">
+        <div class="overflow-auto">
+            <ul aria-disabled="false" aria-label="Pagination" class="pagination b-pagination justify-content-center">
+                <!-- 첫페이지로 버튼-->
                 <li class="page-item">
-                    <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="loadPrevPage()">...</button>
+                    <button type="button" tabindex="-1" class="page-link" @click="firstPage()" :disabled="this.currentPageIndex == 1? true : false">«</button>
                 </li>
-            </div>
 
-            <!--페이지 범위 보여주기-->
-            <div v-for="(pageIndex, index) in displayPageArray" v-bind:key="index">
-                <li class="page-item" :class="{ 'active' : pageIndex === currentPageIndex }">
-                    <button type="button" aria-controls="my-list" aria-checked="true" tabindex="-1" class="page-link" @click="changePage(pageIndex)">{{pageIndex}}</button>
-                </li>
-            </div>
-
-            <!-- 앞 페이지 범위로 이동 -->
-            <div v-if="hasMorePage">
+                <!-- 이전 페이지 버튼-->
                 <li class="page-item">
-                    <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="loadMorePage()">...</button>
+                    <button type="button" tabindex="-1" class="page-link" @click="prevPage()" :disabled="this.currentPageIndex == 1? true : false">‹</button>
                 </li>
-            </div>
 
-             <!-- 다음 페이지-->
-            <li class="page-item">
-                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="nextPage()" :disabled="this.currentPageIndex == this.totalPage? true : false">›</button>
-            </li>
+                <!--이전 페이지 범위로 이동 -->
+                <div v-if="hasPrevPage">
+                    <li class="page-item">
+                        <button type="button" tabindex="-1" class="page-link" @click="loadPrevPage()">...</button>
+                    </li>
+                </div>
 
-             <!-- 맨 마지막 페이지로 이동-->
-            <li class="page-item">
-                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="lastPage()" :disabled="this.currentPageIndex == this.totalPage? true : false">»</button>
-            </li>
-        </ul>
-    </div>
+                <!--페이지 범위 보여주기-->
+                <div v-for="(pageIndex, index) in displayPageArray" v-bind:key="index">
+                    <li class="page-item" :class="{ 'active' : pageIndex === currentPageIndex }">
+                        <button type="button" aria-checked="true" tabindex="-1" class="page-link" @click="changePage(pageIndex)">{{pageIndex}}</button>
+                    </li>
+                </div>
+
+                <!-- 앞 페이지 범위로 이동 -->
+                <div v-if="hasMorePage">
+                    <li class="page-item">
+                        <button type="button" tabindex="-1" class="page-link" @click="loadMorePage()">...</button>
+                    </li>
+                </div>
+
+                <!-- 다음 페이지-->
+                <li class="page-item">
+                    <button type="button" tabindex="-1" class="page-link" @click="nextPage()" :disabled="this.currentPageIndex == this.totalPage? true : false">›</button>
+                </li>
+
+                <!-- 맨 마지막 페이지로 이동-->
+                <li class="page-item">
+                    <button type="button" tabindex="-1" class="page-link" @click="lastPage()" :disabled="this.currentPageIndex == this.totalPage? true : false">»</button>
+                </li>
+            </ul>
+        </div>
+    </b-container>
 </template>
 <script>
+
 export default {
     props: ['totalData', 'pageOption'],
     data() {
@@ -58,20 +61,28 @@ export default {
         }
     },
     watch : {
-        displayPageArray(newVal, oldVal) {
-            //이전 페이지로 바꾸는 버튼 활성화
-            if(oldVal.length != 0 && newVal.length) {
-                this.hasPrevPage = true;
-            }
-            if(newVal[0] === 1) {
-                this.hasPrevPage = false;
+        displayPageArray : {
+            handler(newVal, oldVal) {
+                //이전 페이지로 바꾸는 버튼 활성화
+                if(oldVal.length != 0 && newVal.length) {
+                    this.hasPrevPage = true;
+                }
+                if(newVal[0] === 1) {
+                    this.hasPrevPage = false;
+                }
             }
         },
-    },
-    created(){
-        this.getTotalPage(); //총 페이지 개수 구하기
-        this.setPagination(this.currentPageIndex);
-        this.setPageRange(this.currentPageIndex);
+        pageOption : {
+            immediate : true,
+            deep : true,
+            handler(newVal) {
+                this.pageOption = newVal;
+                this.currentPageIndex = 1;
+                this.getTotalPage();
+                this.setPageRange(this.currentPageIndex);
+                this.setPagination(this.currentPageIndex);
+            }
+        }
     },
     methods: {
         //페이징 범위 처리하는 함수

@@ -23,7 +23,7 @@ const fetchData = (currentPageIndex, pageOption) => {
     ];
 
     //초기화
-    let totalData = 153;
+    let totalData = 350;
 
     //totalData 개수 만큼 배열 만들어 주기!
     for(let i = 0; i < totalData - 20; i++) {

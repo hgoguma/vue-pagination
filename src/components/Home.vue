@@ -2,19 +2,17 @@
     <div>
         <!--Header-->
         <Header />
-
+        <PageOption @setPageOption="setPageOption" />
         <!--List-->
-        <List id="my-list" :movieData="movieData" />
-
+        <List :movieData="movieData" />
         <!-- Pagination -->
-        <b-container class="text-center">
-            <Pagination :totalData="totalData" :pageOption="this.pageOption" @changePage="changePage" />
-        </b-container>
+        <Pagination v-if="this.pageOption != null"  :totalData="totalData" :pageOption="this.pageOption" @changePage="changePage" />
     </div>
 </template>
 
 <script>
 import Header from './Header.vue'
+import PageOption from './PageOption.vue'
 import List from './List.vue'
 import Pagination from './Pagination.vue'
 
@@ -24,21 +22,19 @@ import fetchData from "../js/data.js";
 export default {
   components: {
     Header,
+    PageOption,
     List,
     Pagination
   },
   data() {
     return {
-        totalData : 0,
-        pageOption : {
-          pageCount : 5,
-          dataPerPage : 5
-        },
+        totalData : 0, //총 데이터 개수
+        pageOption : null,
         movieData : [],
     }
   },
   created() {
-    this.fetchDataFromJs(1);
+    console.log('Home created', this.pageOption);
   },
   methods : {
       fetchDataFromJs(currentPageIndex) {
@@ -46,13 +42,17 @@ export default {
         this.movieData = [];
         let data = fetchData(currentPageIndex, this.pageOption);
         this.totalData = data.totalData;
-        let poster_path = data.results.map(element => element.poster_path = 'https://image.tmdb.org/t/p/w500' + element.poster_path); //배열
+        let poster_path = data.results.map(element => element.poster_path = 'https://image.tmdb.org/t/p/w500' + element.poster_path);
         data.results.poster_path = poster_path;
         this.movieData = data.results;
       },
       changePage(currentPageIndex) {
         this.fetchDataFromJs(currentPageIndex);
       },
+      setPageOption(pageOption) {
+        this.pageOption = pageOption;
+        this.fetchDataFromJs(1);
+      }
   }
 }
 </script>
