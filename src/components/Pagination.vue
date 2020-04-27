@@ -83,10 +83,7 @@ export default {
                 this.pageOption = newVal;
                 this.currentPageIndex = 1;
                 this.setTotalPage();
-
                 this.chagePageAndSetPagination(this.currentPageIndex);
-                //this.setPageRange(this.currentPageIndex);
-                //this.setPagination(this.currentPageIndex);
             }
         }
     },
