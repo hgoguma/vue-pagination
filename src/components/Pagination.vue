@@ -3,7 +3,7 @@
         <ul aria-disabled="false" aria-label="Pagination" class="pagination b-pagination justify-content-center">
             <!-- 첫페이지로 버튼-->
             <li class="page-item">
-                <button type="button" tabindex="1" aria-controls="my-list" class="page-link" @click="firstPage()" :disabled="this.currentPageIndex == 1? true : false">«</button>
+                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="firstPage()" :disabled="this.currentPageIndex == 1? true : false">«</button>
             </li>
 
             <!-- 이전 페이지 버튼-->
@@ -14,7 +14,7 @@
             <!--이전 페이지 범위로 이동 -->
             <div v-if="hasPrevPage">
                 <li class="page-item">
-                    <button type="button" tabindex="1" aria-controls="my-list" class="page-link" @click="loadPrevPage()">...</button>
+                    <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="loadPrevPage()">...</button>
                 </li>
             </div>
 
@@ -28,13 +28,13 @@
             <!-- 앞 페이지 범위로 이동 -->
             <div v-if="hasMorePage">
                 <li class="page-item">
-                    <button type="button" tabindex="+1" aria-controls="my-list" class="page-link" @click="loadMorePage()">...</button>
+                    <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="loadMorePage()">...</button>
                 </li>
             </div>
 
              <!-- 다음 페이지-->
             <li class="page-item">
-                <button type="button" tabindex="+1" aria-controls="my-list" class="page-link" @click="nextPage()" :disabled="this.currentPageIndex == this.pagination.totalPage? true : false">›</button>
+                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="nextPage()" :disabled="this.currentPageIndex == this.pagination.totalPage? true : false">›</button>
             </li>
 
              <!-- 맨 마지막 페이지로 이동-->
@@ -53,7 +53,7 @@ export default {
             displayPageArray : [], //실제 보여주는 페이지 범위
             hasMorePage : false, //더보기 버튼 여부
             hasPrevPage : false, //이전 더보기 버튼 여부
-            pageRange : [],
+            pageRange : [], //[startPage, endPage] 배열
         }
     },
     watch : {
@@ -89,16 +89,14 @@ export default {
                 this.hasMorePage = false;
             }
         },
+        //startPage, endPage 구해서 pageRange 배열 만드는 함수
         setPageRange(currentPageIndex) {
-            console.log('setPageRange!', currentPageIndex);
             this.pageRange = [];
             let endPage = (Math.ceil(currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
             let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
             if(endPage > this.pagination.totalPage) {
                 endPage = this.pagination.totalPage;
             }
-            
-            
             if(this.pagination.totalPage < 1 || this.pagination.totalPage == 1) {
                 startPage = endPage;
             }
@@ -110,9 +108,8 @@ export default {
             this.setPagination(this.pageRange[0]);
         },
         changePage(pageIndex) {
-            this.currentPageIndex = pageIndex; //현재 보고 있는 페이지 바꿔주기
-            this.getPageRange(this.currentPageIndex); //startPage, endPage 바꿔주기
-            this.$emit('changePage', this.currentPageIndex);
+            this.currentPageIndex = pageIndex;
+            this.chagePageAndSetPagination(this.currentPageIndex);
         },
         firstPage() {
             this.currentPageIndex = 1;
@@ -131,11 +128,11 @@ export default {
             this.chagePageAndSetPagination(this.currentPageIndex);
         },
         loadMorePage() {
-            this.currentPageIndex = this.pagination.endPage + 1;
+            this.currentPageIndex = this.pageRange[1] + 1;
             this.chagePageAndSetPagination(this.currentPageIndex);
         },
         loadPrevPage() {
-            this.currentPageIndex = this.pagination.startPage - this.pagination.pageOption.pageCount;
+            this.currentPageIndex = this.pageRange[0] - this.pagination.pageOption.pageCount;
             this.chagePageAndSetPagination(this.currentPageIndex);
         },
     }

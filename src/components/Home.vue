@@ -32,7 +32,7 @@ export default {
         pagination : [],
         pageOption : {
           pageCount : 5,
-          dataPerPage : 10
+          dataPerPage : 5
         },
         movieData : [],
     }
