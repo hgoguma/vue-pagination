@@ -78,7 +78,7 @@ export default {
             handler(newVal) {
                 this.pageOption = newVal;
                 this.currentPageIndex = 1;
-                this.getTotalPage();
+                this.setTotalPage();
                 this.setPageRange(this.currentPageIndex);
                 this.setPagination(this.currentPageIndex);
             }
@@ -120,7 +120,7 @@ export default {
             this.setPageRange(currentPageIndex);
             this.setPagination(this.pageRange[0]);
         },
-        getTotalPage() {
+        setTotalPage() {
             this.totalPage = Math.ceil(this.totalData/this.pageOption.dataPerPage);
         },
         //click 이벤트 함수

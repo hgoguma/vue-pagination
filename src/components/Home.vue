@@ -2,9 +2,12 @@
     <div>
         <!--Header-->
         <Header />
+         <!--Pagination Option -->
         <PageOption @setPageOption="setPageOption" />
+        
         <!--List-->
         <List :movieData="movieData" />
+       
         <!-- Pagination -->
         <Pagination v-if="this.pageOption != null"  :totalData="totalData" :pageOption="this.pageOption" @changePage="changePage" />
     </div>
