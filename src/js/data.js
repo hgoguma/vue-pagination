@@ -1,6 +1,4 @@
 const fetchData = (currentPageIndex, pageOption) => {
-    //페이지 옵션 page index, pagesize 등등 설정하기 -> parameter
-    //let results = []; //20개 들어있는 배열
     let resultArray = [[
         {"id":181812,"original_title":"Star Wars: The Rise of Skywalker","poster_path":"/opENUWyvrxvsXrRM3qq4wmJDCo2.jpg","title":"스타워즈: 라이즈 오브 스카이워커"},
         {"id":38700,"title":"나쁜 녀석들: 포에버","original_title":"Bad Boys for Life","poster_path":"/anhvhTzdjzMLzGV8oTFNssvMTIw.jpg"},
@@ -26,7 +24,6 @@ const fetchData = (currentPageIndex, pageOption) => {
     ]];
 
     //초기화
-
     let totalData = 138;
     let pageIndexArray = [];
     
@@ -40,13 +37,9 @@ const fetchData = (currentPageIndex, pageOption) => {
     if(endPage > totalPage) {
         endPage = totalPage;
     }
-
-    console.log('endPage??????', endPage);
     
     //let startPage = endPage-(pageOption.pageCount-1);
     let startPage = ((currentPageIndex - 1) / pageOption.pageCount) * pageOption.pageCount + 1;
-    console.log('startPage??????', startPage);
-
 
     for(let i = 0; i < totalPage; i++) {
         pageIndexArray.push(i+1);
@@ -61,43 +54,20 @@ const fetchData = (currentPageIndex, pageOption) => {
     } else {
         resultArray = resultArray[1];
     }
-
     
-
-    console.log('데이터?', resultArray);
-
-    
-    //page 범위 계산해서 던져주기
-    
-
     let dummyData = {
         "pagination": {
             "totalData": totalData, //총 데이터 개수
-            "totalPage" : totalPage, //총 몇개의 페이징 처리가 필요한지 계산
+            "totalPage" : totalPage, //총 페이지 개수
             "pageGroup": pageGroup, //페이지 그룹
             "startPage": startPage, //시작 페이지 index
-            "endPage": endPage, //마지막 페이지 index
+            "endPage": endPage, //끝 페이지 index
             "pageOption" : pageOption,
             "currentPageIndex" : currentPageIndex,
-            "pageIndexArray" : pageIndexArray,
+            "pageIndexArray" : pageIndexArray, 
         },
         "results" : resultArray
     }
-
-
-
-    //displayPageRange : 6 ~ 10 이 있어야 됨!
-    // function getDisplayPageRange(currentPageIndex, pageCount) {
-    //     let displayPageRange = [];
-    //     for(var i = 0; i <this.totalPage; i++) {
-    //         displayPageRange.push(i + 1);
-    //     }
-    //     return displayPageRange;
-    // }
-
-    //start page & end page 계산해서 넘겨줌 -> 이걸로 페이지쪽 바꿔줌
-
-    
         
     return dummyData;
 }

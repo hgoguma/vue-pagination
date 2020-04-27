@@ -1,16 +1,17 @@
 <template>
-    <div class="overflow-auto" v-bind="currentPageIndex">
+    <div class="overflow-auto">
         <ul aria-disabled="false" aria-label="Pagination" class="pagination b-pagination justify-content-center">
             <!-- 첫페이지로 버튼-->
             <li class="page-item">
-                <button type="button" tabindex="1" aria-controls="my-list" class="page-link" @click="firstPage(e)">«</button>
-            </li>
-            <!-- 이전 버튼-->
-            <li class="page-item">
-                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="prevPage(e)">‹</button>
+                <button type="button" tabindex="1" aria-controls="my-list" class="page-link" @click="firstPage()" :disabled="this.currentPageIndex == 1? true : false">«</button>
             </li>
 
-            <!--이전 페이지 범위 이동 -->
+            <!-- 이전 페이지 버튼-->
+            <li class="page-item">
+                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="prevPage()" :disabled="this.currentPageIndex == 1? true : false">‹</button>
+            </li>
+
+            <!--이전 페이지 범위로 이동 -->
             <div v-if="hasPrevPage">
                 <li class="page-item">
                     <button type="button" tabindex="1" aria-controls="my-list" class="page-link" @click="loadPrevPage()">...</button>
@@ -24,20 +25,21 @@
                 </li>
             </div>
 
-            <!-- 페이지 더 보여주기 -->
+            <!-- 앞 페이지 범위로 이동 -->
             <div v-if="hasMorePage">
                 <li class="page-item">
                     <button type="button" tabindex="+1" aria-controls="my-list" class="page-link" @click="loadMorePage()">...</button>
                 </li>
             </div>
 
-            
-
+             <!-- 다음 페이지-->
             <li class="page-item">
-                <button type="button" tabindex="+1" aria-controls="my-list" class="page-link" @click="nextPage(e)">›</button>
+                <button type="button" tabindex="+1" aria-controls="my-list" class="page-link" @click="nextPage()" :disabled="this.currentPageIndex == this.pagination.totalPage? true : false">›</button>
             </li>
+
+             <!-- 맨 마지막 페이지로 이동-->
             <li class="page-item">
-                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="lastPage(e)">»</button>
+                <button type="button" tabindex="-1" aria-controls="my-list" class="page-link" @click="lastPage()" :disabled="this.currentPageIndex == this.pagination.totalPage? true : false">»</button>
             </li>
         </ul>
     </div>
@@ -53,13 +55,12 @@ export default {
             displayPageArray : [],
             hasMorePage : false,
             hasPrevPage : false,
+            isFirstPage : false,
+            isLasgPage : false,
         }
     },
     watch : {
         displayPageArray(newVal, oldVal) {
-            console.log('setHasMorePage!');
-            console.log('new', newVal);
-            console.log('old', oldVal);            
             //이전 페이지로 바꾸는 버튼 활성화
             if(oldVal.length != 0 && newVal.length) {
                 this.hasPrevPage = true;
@@ -76,7 +77,6 @@ export default {
     methods: {
         setPagination(startPage) {
             this.displayPageArray = [];
-            console.log('들어온 값', startPage);
             for(let i = 0; i < this.pagination.pageOption.pageCount; i++) {
                 let pageIndex = startPage + i;
                 if(pageIndex > this.pagination.totalPage) {
@@ -95,42 +95,26 @@ export default {
             this.currentPageIndex = pageIndex; //현재 보고 있는 페이지 바꿔주기
             this.$emit('changePage', this.currentPageIndex);
         },
-        firstPage(e) {
-            if(this.currentPageIndex === 1){
-                e.preventDefault();
-                return;
-            }
+        firstPage() {
             this.currentPageIndex = 1;
             this.$emit('changePage', this.currentPageIndex);
             this.setPagination(this.currentPageIndex);
         },
-        prevPage(e) {
-            if(this.currentPageIndex === 1){
-                e.preventDefault();
-                return;
-            }
+        prevPage() {
             this.currentPageIndex--;
             this.$emit('changePage', this.currentPageIndex);
         },
-        nextPage(e) {
-            if(this.currentPageIndex === this.pagination.totalPage){
-                e.preventDefault();
-                return;
-            }
+        nextPage() {
             this.currentPageIndex++;
             this.$emit('changePage', this.currentPageIndex);
         },
-        lastPage(e) {
+        lastPage() {
             this.currentPageIndex = this.pagination.totalPage;
             this.$emit('changePage', this.currentPageIndex);
             let endPage = (Math.ceil(this.currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
             let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
             //시작 페이지 던져주기
             this.setPagination(startPage);
-            if(this.currentPageIndex === this.pagination.totalPage){
-                e.preventDefault();
-                return;
-            }
         },
         loadMorePage() {
             this.currentPageIndex = this.pagination.endPage + 1;
