@@ -49,10 +49,11 @@ export default {
     props: ['pagination'],
     data() {
         return {
-            currentPageIndex : '',
+            currentPageIndex : 1,
             displayPageArray : [], //실제 보여주는 페이지 범위
             hasMorePage : false, //더보기 버튼 여부
             hasPrevPage : false, //이전 더보기 버튼 여부
+            pageRange : [],
         }
     },
     watch : {
@@ -67,8 +68,8 @@ export default {
         },
     },
     created(){
-        this.currentPageIndex = 1;
-        this.setPagination(1);
+        this.setPagination(this.currentPageIndex);
+        this.setPageRange(this.currentPageIndex);
     },
     methods: {
         //페이징 범위 처리하는 함수
@@ -88,49 +89,55 @@ export default {
                 this.hasMorePage = false;
             }
         },
+        setPageRange(currentPageIndex) {
+            console.log('setPageRange!', currentPageIndex);
+            this.pageRange = [];
+            let endPage = (Math.ceil(currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
+            let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
+            if(endPage > this.pagination.totalPage) {
+                endPage = this.pagination.totalPage;
+            }
+            
+            
+            if(this.pagination.totalPage < 1 || this.pagination.totalPage == 1) {
+                startPage = endPage;
+            }
+            this.pageRange.push(startPage, endPage);
+        },
+        chagePageAndSetPagination(currentPageIndex) {
+            this.$emit('changePage', currentPageIndex);
+            this.setPageRange(currentPageIndex);
+            this.setPagination(this.pageRange[0]);
+        },
         changePage(pageIndex) {
             this.currentPageIndex = pageIndex; //현재 보고 있는 페이지 바꿔주기
+            this.getPageRange(this.currentPageIndex); //startPage, endPage 바꿔주기
             this.$emit('changePage', this.currentPageIndex);
         },
         firstPage() {
             this.currentPageIndex = 1;
-            this.$emit('changePage', this.currentPageIndex);
-            this.setPagination(this.currentPageIndex);
+            this.chagePageAndSetPagination(this.currentPageIndex);
         },
         prevPage() {
             this.currentPageIndex--;
-            this.$emit('changePage', this.currentPageIndex);
-            let startPage = this.getStartPage(this.currentPageIndex);
-            this.setPagination(startPage);
+            this.chagePageAndSetPagination(this.currentPageIndex);
         },
         nextPage() {
             this.currentPageIndex++;
-            this.$emit('changePage', this.currentPageIndex);
-            let startPage = this.getStartPage(this.currentPageIndex);
-            this.setPagination(startPage);
+            this.chagePageAndSetPagination(this.currentPageIndex);
         },
         lastPage() {
             this.currentPageIndex = this.pagination.totalPage;
-            this.$emit('changePage', this.currentPageIndex);
-            let startPage = this.getStartPage(this.currentPageIndex);
-            this.setPagination(startPage);
+            this.chagePageAndSetPagination(this.currentPageIndex);
         },
         loadMorePage() {
             this.currentPageIndex = this.pagination.endPage + 1;
-            this.$emit('changePage', this.currentPageIndex);
-            this.setPagination(this.currentPageIndex);
+            this.chagePageAndSetPagination(this.currentPageIndex);
         },
         loadPrevPage() {
             this.currentPageIndex = this.pagination.startPage - this.pagination.pageOption.pageCount;
-            this.$emit('changePage', this.currentPageIndex);
-            let startPage = this.getStartPage(this.currentPageIndex);
-            this.setPagination(startPage);
+            this.chagePageAndSetPagination(this.currentPageIndex);
         },
-        getStartPage(currentPageIndex) {
-            let endPage = (Math.ceil(currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
-            let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
-            return startPage;
-        }
     }
 }
 </script>

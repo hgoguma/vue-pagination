@@ -42,15 +42,15 @@ export default {
   },
   methods : {
       fetchDataFromJs(currentPageIndex) {
-        let data = fetchData(currentPageIndex, this.pageOption);
-        this.pagination = data.pagination;
-        this.movieData = data.results;
-        let poster_path = data.results.map(element => element.poster_path = 'https://image.tmdb.org/t/p/w500' + element.poster_path);
-        this.movieData.poster_path = poster_path;
-      },
-      changePage(currentPageIndex) {
         //기존 데이터 비우기
         this.movieData = [];
+        let data = fetchData(currentPageIndex, this.pageOption);
+        this.pagination = data.pagination;
+        let poster_path = data.results.map(element => element.poster_path = 'https://image.tmdb.org/t/p/w500' + element.poster_path); //배열
+        data.results.poster_path = poster_path;
+        this.movieData = data.results;
+      },
+      changePage(currentPageIndex) {        
         this.fetchDataFromJs(currentPageIndex);
       },
   }
