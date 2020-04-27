@@ -23,22 +23,17 @@ const fetchData = (currentPageIndex, pageOption) => {
     ];
 
     //초기화
-    let totalData = 53;
-    
-    //총 몇개의 페이징 처리가 필요한지 계산
-    let totalPage = Math.ceil(totalData/pageOption.dataPerPage);
-    
+    let totalData = 153;
+
     //totalData 개수 만큼 배열 만들어 주기!
     for(let i = 0; i < totalData - 20; i++) {
         data.push(data[i]);
     }
 
-    //10개(dataPerPage) 만큼 원래 배열 끊어서 새로 배열 만들자!
+    //데이터를 dataPerPage 만큼 끊어서 새로 배열 만들기
+    let resultArray = [];
 
-
-    let resultArray = []; //데이터를 dataPerPage 만큼 끊어서 새로 배열 만들기
-
-    for(let i = 0; i < totalPage; i++) {
+    for(let i = 0; i < Math.ceil(totalData/pageOption.dataPerPage); i++) {
         let k = i * pageOption.dataPerPage;
         let arr = data.slice(k, k+pageOption.dataPerPage);
         resultArray.push(arr);
@@ -49,7 +44,6 @@ const fetchData = (currentPageIndex, pageOption) => {
     let dummyData = {
         "pagination": {
             "totalData": totalData, //총 데이터 개수
-            "totalPage" : totalPage, //총 페이지 개수
             "pageOption" : pageOption,
             "currentPageIndex" : currentPageIndex,
         },

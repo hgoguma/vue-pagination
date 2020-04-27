@@ -50,6 +50,7 @@ export default {
     data() {
         return {
             currentPageIndex : 1,
+            totalPage : 0,
             displayPageArray : [], //실제 보여주는 페이지 범위
             hasMorePage : false, //더보기 버튼 여부
             hasPrevPage : false, //이전 더보기 버튼 여부
@@ -68,6 +69,7 @@ export default {
         },
     },
     created(){
+        this.getTotalPage(); //총 페이지 개수 구하기
         this.setPagination(this.currentPageIndex);
         this.setPageRange(this.currentPageIndex);
     },
@@ -77,15 +79,15 @@ export default {
             this.displayPageArray = []; 
             for(let i = 0; i < this.pagination.pageOption.pageCount; i++) {
                 let pageIndex = startPage + i;
-                if(pageIndex > this.pagination.totalPage) {
+                if(pageIndex > this.totalPage) {
                     break;
                 }
                 this.displayPageArray.push(pageIndex);
             }
-            if(this.pagination.totalPage > this.displayPageArray[this.displayPageArray.length -1 ]) {
+            if(this.totalPage > this.displayPageArray[this.displayPageArray.length -1 ]) {
                 this.hasMorePage = true;
             }
-            if(this.pagination.totalPage === this.displayPageArray[this.displayPageArray.length -1 ]) {
+            if(this.totalPage === this.displayPageArray[this.displayPageArray.length -1 ]) {
                 this.hasMorePage = false;
             }
         },
@@ -94,10 +96,10 @@ export default {
             this.pageRange = [];
             let endPage = (Math.ceil(currentPageIndex / this.pagination.pageOption.pageCount) * this.pagination.pageOption.pageCount);
             let startPage = (endPage - this.pagination.pageOption.pageCount)+1;
-            if(endPage > this.pagination.totalPage) {
-                endPage = this.pagination.totalPage;
+            if(endPage > this.totalPage) {
+                endPage = this.totalPage;
             }
-            if(this.pagination.totalPage < 1 || this.pagination.totalPage == 1) {
+            if(this.totalPage < 1 || this.totalPage == 1) {
                 startPage = endPage;
             }
             this.pageRange.push(startPage, endPage);
@@ -107,6 +109,10 @@ export default {
             this.setPageRange(currentPageIndex);
             this.setPagination(this.pageRange[0]);
         },
+        getTotalPage() {
+            this.totalPage = Math.ceil(this.pagination.totalData/this.pagination.pageOption.dataPerPage);
+        },
+        //click 이벤트 함수
         changePage(pageIndex) {
             this.currentPageIndex = pageIndex;
             this.chagePageAndSetPagination(this.currentPageIndex);
@@ -124,7 +130,7 @@ export default {
             this.chagePageAndSetPagination(this.currentPageIndex);
         },
         lastPage() {
-            this.currentPageIndex = this.pagination.totalPage;
+            this.currentPageIndex = this.totalPage;
             this.chagePageAndSetPagination(this.currentPageIndex);
         },
         loadMorePage() {
