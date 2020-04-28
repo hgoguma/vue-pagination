@@ -1,4 +1,4 @@
-let totalData = 148; //만들어진 데이터 개수
+let totalData = 148; //새로 추가되면 바뀜
 
 let data = [
     {"id":181812,"original_title":"Star Wars: The Rise of Skywalker","poster_path":"https://image.tmdb.org/t/p/w500/opENUWyvrxvsXrRM3qq4wmJDCo2.jpg","title":"스타워즈: 라이즈 오브 스카이워커"},
@@ -36,13 +36,18 @@ const makeDataArray = (totalData) => {
     return newArray;
 }
 
+let newArray = makeDataArray(totalData);
 
 const fetchData = (currentPageIndex, pageOption) => {
+
+
     console.log('fetchData!');
     
-    let array = makeDataArray(totalData); //totalData 개수 만큼 배열 만듦
+    //let array = makeDataArray(totalData); //totalData 개수 만큼 배열 만듦
 
     //데이터를 dataPerPage 만큼 끊어서 새로 배열 만들기
+
+   
     let resultArray = []; //ex ) [ [1,2,3,4,5], [6,7,8,9,10], [11,12,13] ]...
 
     let totalPage = Math.ceil(totalData/pageOption.dataPerPage); //총 페이지 개수
@@ -50,7 +55,7 @@ const fetchData = (currentPageIndex, pageOption) => {
     for(let i = 0; i < totalPage; i++) {
         let k = i * Number(pageOption.dataPerPage);
         let j = k+Number(pageOption.dataPerPage);
-        let  arr = array.slice(k, j);
+        let  arr = newArray.slice(k, j);
         resultArray.push(arr);
     }
 
@@ -85,7 +90,10 @@ const saveData = (formData) => {
         poster_path : poster_path
     }
     //배열에 집어 넣기
-    data.push(savedData);
+
+    newArray.unshift(savedData);
+
+    //console.log('after push', newArray);
 
     //전체 데이터 개수 올리기
     totalData++;

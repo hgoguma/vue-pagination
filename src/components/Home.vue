@@ -6,7 +6,7 @@
         <PageOption @setPageOption="setPageOption" />
           
 
-        <FormComponent @submitForm="submitForm"/>
+        <FormComponent  v-if="this.pageOption != null" @submitForm="submitForm"/>
 
         <!--List-->
         <List :movieData="movieData" />
@@ -64,6 +64,7 @@ export default {
       submitForm(formData) {
         saveData(formData);
         alert('등록되었습니다.');
+        this.fetchDataFromJs(1);
       }
   }
 }
