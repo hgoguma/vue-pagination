@@ -4,6 +4,9 @@
         <Header />
          <!--Pagination Option -->
         <PageOption @setPageOption="setPageOption" />
+          
+
+        <FormComponent @submitForm="submitForm"/>
 
         <!--List-->
         <List :movieData="movieData" />
@@ -16,16 +19,21 @@
 <script>
 import Header from './Header.vue'
 import PageOption from './PageOption.vue'
+import FormComponent from './Form.vue'
 import List from './List.vue'
 import Pagination from './Pagination.vue'
 
-import fetchData from "../js/data.js";
+//import fetchData from "../js/fetch.js";
+
+const { fetchData, saveData } = require('../js/data.js');
+
 
 
 export default {
   components: {
     Header,
     PageOption,
+    FormComponent,
     List,
     Pagination
   },
@@ -38,24 +46,24 @@ export default {
   },
   methods : {
       fetchDataFromJs(currentPageIndex) {
+        console.log('fetchDataFromJs');
         //기존 데이터 비우기
         this.movieData = [];
-        //console.log('기존 데이터 비워짐?', this.movieData);
         let data = fetchData(currentPageIndex, this.pageOption);
-        this.totalData = data.totalData;
-        console.log('가져온 데이터는요?', data.results);
-        let poster_path = data.results.map(element => element.poster_path = 'https://image.tmdb.org/t/p/w500' + element.poster_path);
-        data.results.poster_path = poster_path;
         this.movieData = data.results;
+        this.totalData = data.totalData;
       },
       changePage(currentPageIndex) {
-        console.log('changePage!!!');
-        console.log('지금 페이지는?', currentPageIndex);
         this.fetchDataFromJs(currentPageIndex);
       },
       setPageOption(pageOption) {
+        console.log('setPageOption');
         this.pageOption = pageOption;
         this.fetchDataFromJs(1);
+      },
+      submitForm(formData) {
+        saveData(formData);
+        alert('등록되었습니다.');
       }
   }
 }

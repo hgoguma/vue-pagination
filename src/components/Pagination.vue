@@ -57,7 +57,7 @@ export default {
         pageOption : {
             required : true,
             type : Object
-        }
+        },
     },
     data() {
         return {
@@ -93,8 +93,9 @@ export default {
                 this.currentPageIndex = 1;
                 this.setTotalPage();
                 this.chagePageAndSetPagination(this.currentPageIndex);
+                return;
             }
-        }
+        },
     },
     methods: {
         //페이징 범위 처리하는 함수

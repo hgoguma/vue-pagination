@@ -6,7 +6,7 @@
                 <span style="text-align:center;">페이지 범위</span>
             </b-col>
             <b-col>
-                <b-form-input type="text" v-model="pageOption.pageCount" @keydown="checkValue($event)"></b-form-input>
+                <b-form-input type="text" ref="pageCountInput" v-model="pageOption.pageCount" @keydown="checkValue($event)"></b-form-input>
                 <!-- <b-form-select v-model="pageOption.pageCount" :options="pageCountOption" size="sm"></b-form-select> -->
             </b-col>
             <b-col>
@@ -49,7 +49,6 @@ export default {
         setPageOption() {
             //공백 처리하기!
             if(!this.pageOption.pageCount || !this.pageOption.dataPerPage) {
-                console.log('공백 있음!');
                 alert('숫자를 입력해주세요');
                 return;
             }
@@ -62,6 +61,7 @@ export default {
                 $event.preventDefault();
             }
         }
+        
     }
 }
 </script>
