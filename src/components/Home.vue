@@ -10,7 +10,7 @@
 
         <!--List-->
         <List :movieData="movieData" @onclickDelete="onclickDelete" />
-       
+        
         <!-- Pagination -->
         <Pagination 
           v-if="this.pageOption != null"  
@@ -29,8 +29,6 @@ import List from './List.vue'
 import Pagination from './Pagination.vue'
 
 const { fetchData, saveData } = require('../js/data.js');
-
-
 
 export default {
   components: {

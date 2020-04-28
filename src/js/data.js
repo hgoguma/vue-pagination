@@ -93,8 +93,6 @@ const saveData = (formData) => {
     //기존 배열 앞에 추가
     newArray.unshift(savedData);
 
-    data.push(savedData);
-
     //전체 데이터 개수 올리기
     totalData++;
 }
@@ -102,7 +100,6 @@ const saveData = (formData) => {
 const deleteData = (id) => {
     //for문 돌면서 id값이랑 일치하는 거 찾아서 배열에서 삭제
     newArray = newArray.filter(element => element.id !== id);
-    //data = data.filter(element => element.id !== id);
     totalData--;
 }
 
