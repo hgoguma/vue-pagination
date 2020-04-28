@@ -1,7 +1,7 @@
 <template>
     <b-container class="mb-2">
         <b-row cols="5" cols-md="4" cols-xl="5">
-            <b-col md="3" v-for="(data, index) in movieData" :key="index">
+            <b-col md="3" v-for="(data) in movieData" :key="data.id">
                 <b-card
                     :title="data.title"
                     :img-src="data.poster_path"
@@ -10,9 +10,9 @@
                     style="max-width: 18rem;"
                     class="mb-1"
                 >
-                    <b-card-text>
-                    {{data.original_title}}
-                    </b-card-text>
+                    <b-card-text>{{data.original_title}}</b-card-text>
+                    <b-button @click="onclickDelete(data.id)" variant="dark">삭제</b-button>
+                    <b-button href="#" variant="light">수정</b-button>
                 </b-card>
             </b-col>
         </b-row>
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+const { deleteData } = require('../js/data.js');
+
 export default {
     props: {
         movieData : {
@@ -27,6 +29,13 @@ export default {
             type : Array
         }
     },
+    methods : {
+        onclickDelete(id) {
+            deleteData(id);
+            alert('삭제 되었습니다.');
+            this.$emit('onclickDelete');
+        }
+    }
     
 }
 </script>

@@ -1,4 +1,4 @@
-let totalData = 148; //새로 추가되면 바뀜
+let totalData = 148;
 
 let data = [
     {"id":181812,"original_title":"Star Wars: The Rise of Skywalker","poster_path":"https://image.tmdb.org/t/p/w500/opENUWyvrxvsXrRM3qq4wmJDCo2.jpg","title":"스타워즈: 라이즈 오브 스카이워커"},
@@ -89,18 +89,25 @@ const saveData = (formData) => {
         original_title : formData.original_title,
         poster_path : poster_path
     }
-    //배열에 집어 넣기
 
+    //기존 배열 앞에 추가
     newArray.unshift(savedData);
 
-    //console.log('after push', newArray);
+    data.push(savedData);
 
     //전체 데이터 개수 올리기
     totalData++;
-    //return savedData;
+}
+
+const deleteData = (id) => {
+    //for문 돌면서 id값이랑 일치하는 거 찾아서 배열에서 삭제
+    newArray = newArray.filter(element => element.id !== id);
+    //data = data.filter(element => element.id !== id);
+    totalData--;
 }
 
 module.exports = {
     fetchData : fetchData,
     saveData : saveData,
+    deleteData : deleteData,
 }

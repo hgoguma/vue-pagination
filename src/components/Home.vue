@@ -6,24 +6,27 @@
         <PageOption @setPageOption="setPageOption" />
           
 
-        <FormComponent  v-if="this.pageOption != null" @submitForm="submitForm"/>
+        <Form  v-if="this.pageOption != null" @submitForm="submitForm"/>
 
         <!--List-->
-        <List :movieData="movieData" />
+        <List :movieData="movieData" @onclickDelete="onclickDelete" />
        
         <!-- Pagination -->
-        <Pagination v-if="this.pageOption != null"  :totalData="this.totalData" :pageOption="this.pageOption" @changePage="changePage" />
+        <Pagination 
+          v-if="this.pageOption != null"  
+          :totalData="this.totalData" 
+          :pageOption="this.pageOption" 
+          @changePage="changePage"
+        />
     </div>
 </template>
 
 <script>
 import Header from './Header.vue'
 import PageOption from './PageOption.vue'
-import FormComponent from './Form.vue'
+import Form from './Form.vue'
 import List from './List.vue'
 import Pagination from './Pagination.vue'
-
-//import fetchData from "../js/fetch.js";
 
 const { fetchData, saveData } = require('../js/data.js');
 
@@ -33,7 +36,7 @@ export default {
   components: {
     Header,
     PageOption,
-    FormComponent,
+    Form,
     List,
     Pagination
   },
@@ -65,7 +68,10 @@ export default {
         saveData(formData);
         alert('등록되었습니다.');
         this.fetchDataFromJs(1);
-      }
+      },
+      onclickDelete() {
+        this.fetchDataFromJs(1);
+      },
   }
 }
 </script>
