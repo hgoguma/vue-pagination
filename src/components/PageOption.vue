@@ -6,13 +6,15 @@
                 <span style="text-align:center;">페이지 범위</span>
             </b-col>
             <b-col>
-                <b-form-select v-model="pageOption.pageCount" :options="pageCountOption" size="sm"></b-form-select>
+                <b-form-input type="text" v-model="pageOption.pageCount" @keydown="checkValue($event)"></b-form-input>
+                <!-- <b-form-select v-model="pageOption.pageCount" :options="pageCountOption" size="sm"></b-form-select> -->
             </b-col>
             <b-col>
                 <span style="text-align:center;">한 페이지당 보여줄 데이터 개수</span>
             </b-col>
             <b-col>
-                <b-form-select v-model="pageOption.dataPerPage" :options="dataPerPageOption" size="sm"></b-form-select>
+                <b-form-input type="text" v-model="pageOption.dataPerPage" @keydown="checkValue($event)"></b-form-input>
+                <!-- <b-form-select v-model="pageOption.dataPerPage" :options="dataPerPageOption" size="sm"></b-form-select> -->
             </b-col>
             <b-col>
                 <b-button v-if="!removeClickBtn" variant="outline-primary" @click="setPageOption()">클릭</b-button>
@@ -22,8 +24,6 @@
 </template>
 
 <script>
-
-
 export default {
     data() {
         return {
@@ -31,24 +31,36 @@ export default {
                 pageCount : null,
                 dataPerPage : null
             },
-            pageCountOption : [ //한 화면에 몇 페이지씩 보여줄 건지
-                { value: 3, text: '3' },
-                { value: 5, text: '5' },
-                { value: 10, text: '10' },
-            ],
-            dataPerPageOption : [
-                { value: 5, text: '5' },
-                { value: 10, text: '10' },
-                { value: 15, text: '15' },
-                { value: 20, text: '20' },
-            ],
+            // pageCountOption : [ //한 화면에 몇 페이지씩 보여줄 건지
+            //     { value: 3, text: '3' },
+            //     { value: 5, text: '5' },
+            //     { value: 10, text: '10' },
+            // ],
+            // dataPerPageOption : [
+            //     { value: 5, text: '5' },
+            //     { value: 10, text: '10' },
+            //     { value: 15, text: '15' },
+            //     { value: 20, text: '20' },
+            // ],
             removeClickBtn : false,
         }
     },
     methods : {
         setPageOption() {
+            //공백 처리하기!
+            if(!this.pageOption.pageCount || !this.pageOption.dataPerPage) {
+                console.log('공백 있음!');
+                alert('숫자를 입력해주세요');
+                return;
+            }
             this.removeClickBtn = true;
             this.$emit('setPageOption', this.pageOption);
+        },
+        checkValue($event) {
+            //숫자 입력만 하게 만들기
+            if(($event.keyCode < 48 || $event.keyCode > 57) && $event.keyCode !== 8) {
+                $event.preventDefault();
+            }
         }
     }
 }
