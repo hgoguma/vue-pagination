@@ -40,13 +40,17 @@ export default {
       fetchDataFromJs(currentPageIndex) {
         //기존 데이터 비우기
         this.movieData = [];
+        //console.log('기존 데이터 비워짐?', this.movieData);
         let data = fetchData(currentPageIndex, this.pageOption);
         this.totalData = data.totalData;
+        console.log('가져온 데이터는요?', data.results);
         let poster_path = data.results.map(element => element.poster_path = 'https://image.tmdb.org/t/p/w500' + element.poster_path);
         data.results.poster_path = poster_path;
         this.movieData = data.results;
       },
       changePage(currentPageIndex) {
+        console.log('changePage!!!');
+        console.log('지금 페이지는?', currentPageIndex);
         this.fetchDataFromJs(currentPageIndex);
       },
       setPageOption(pageOption) {

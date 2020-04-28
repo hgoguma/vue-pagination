@@ -1,4 +1,4 @@
-const fetchData = (currentPageIndex, pageOption) => {
+const makeDataArray = (totalData) => {
     let data = [
         {"id":181812,"original_title":"Star Wars: The Rise of Skywalker","poster_path":"/opENUWyvrxvsXrRM3qq4wmJDCo2.jpg","title":"스타워즈: 라이즈 오브 스카이워커"},
         {"id":38700,"title":"나쁜 녀석들: 포에버","original_title":"Bad Boys for Life","poster_path":"/anhvhTzdjzMLzGV8oTFNssvMTIw.jpg"},
@@ -22,24 +22,30 @@ const fetchData = (currentPageIndex, pageOption) => {
         {"id":526019,"original_title":"Like a Boss","poster_path":"/9qXVdjkKd00mrQEqK4vmSqkLFek.jpg","title":"라이크 어 보스"}
     ];
 
-    //초기화
-    let totalData = 350;
-
-    //totalData 개수 만큼 배열 만들어 주기!
     for(let i = 0; i < totalData - 20; i++) {
         data.push(data[i]);
     }
 
+    return data;
+}
+
+const fetchData = (currentPageIndex, pageOption) => {
+    
+    let totalData = 148; //총 데이터 개수
+
+    let data = makeDataArray(totalData); //총 데이터 개수 만큼 만들어진 배열
+
     //데이터를 dataPerPage 만큼 끊어서 새로 배열 만들기
     let resultArray = []; //ex ) [ [1,2,3,4,5], [6,7,8,9,10], [11,12,13] ]...
 
-    for(let i = 0; i < Math.ceil(totalData/pageOption.dataPerPage); i++) {
-        let k = i * pageOption.dataPerPage;
-        let arr = data.slice(k, k+pageOption.dataPerPage);
+    let totalPage = Math.ceil(totalData/pageOption.dataPerPage); //총 페이지 개수
+
+    for(let i = 0; i < totalPage; i++) {
+        let k = i * Number(pageOption.dataPerPage);
+        let j = k+Number(pageOption.dataPerPage);
+        let  arr = data.slice(k, j);
         resultArray.push(arr);
     }
-
-    //console.log('만들어진 배열?', resultArray);
 
     let dummyData = {
         "currentPageIndex" : currentPageIndex,
