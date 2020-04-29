@@ -54,7 +54,6 @@ export default {
     }
   },
   created() {
-    console.log('Home created!!');
     this.pageOption = this.defaultOption;
     this.fetchDataFromJs(1);
   },
