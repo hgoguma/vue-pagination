@@ -18,13 +18,6 @@ export default {
                 title : '',
                 original_title : '',
             },
-            // title : '',
-            // original_title : '',
-            
-            //original_title
-            //id -> js에서 주기
-            //poster_path  -> js에서 주기 https://image.tmdb.org/t/p/w500/zXfQcdTx0jxbH5Atpwjvb5z5VjE.jpg
-            //title
         }
     },
     methods : {
@@ -37,7 +30,6 @@ export default {
             //emit
             this.$emit('submitForm', this.form);
             this.form = {};
-            
         }
     }
 }

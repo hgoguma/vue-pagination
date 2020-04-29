@@ -6,18 +6,21 @@
         <PageOption @setPageOption="setPageOption" />
           
 
-        <Form  v-if="this.pageOption != null" @submitForm="submitForm"/>
+        <Form v-if="this.pageOption != null" @submitForm="submitForm"/>
 
         <!--List-->
-        <List :movieData="movieData" @onclickDelete="onclickDelete" />
+        <List v-if="this.pageOption !== null" :movieData="movieData" @onclickDelete="onclickDelete" />
         
         <!-- Pagination -->
         <Pagination 
-          v-if="this.pageOption != null"  
+          v-if="this.pageOption !== null"
           :totalData="this.totalData" 
           :pageOption="this.pageOption" 
           @changePage="changePage"
         />
+
+        <!--수정 모달창 --> 
+        <ModifyModal v-if="this.pageOption !== null" @modified="modified" />
     </div>
 </template>
 
@@ -27,6 +30,7 @@ import PageOption from './PageOption.vue'
 import Form from './Form.vue'
 import List from './List.vue'
 import Pagination from './Pagination.vue'
+import ModifyModal from './ModifyModal.vue'
 
 const { fetchData, saveData } = require('../js/data.js');
 
@@ -36,7 +40,8 @@ export default {
     PageOption,
     Form,
     List,
-    Pagination
+    Pagination,
+    ModifyModal,
   },
   data() {
     return {
@@ -47,7 +52,6 @@ export default {
   },
   methods : {
       fetchDataFromJs(currentPageIndex) {
-        console.log('fetchDataFromJs');
         //기존 데이터 비우기
         this.movieData = [];
         let data = fetchData(currentPageIndex, this.pageOption);
@@ -58,7 +62,6 @@ export default {
         this.fetchDataFromJs(currentPageIndex);
       },
       setPageOption(pageOption) {
-        console.log('setPageOption');
         this.pageOption = pageOption;
         this.fetchDataFromJs(1);
       },
@@ -70,6 +73,9 @@ export default {
       onclickDelete() {
         this.fetchDataFromJs(1);
       },
+      modified() {
+        this.fetchDataFromJs(1);
+      }
   }
 }
 </script>
