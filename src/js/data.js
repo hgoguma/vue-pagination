@@ -103,10 +103,11 @@ const deleteData = (id) => {
 
 const getMovieData = (movieId) => {
     //id로 배열에서 값 찾기
-    //let movieData = data.filter( element => element.id === movieId)[0];
-    let movieData = data.find( element => element.id === movieId);
-    //console.log('after find!', movieData, '/ 배열임? ', movieData.isArray());
-    //console.log('데이터 가져오기!', data === movieData); //false -> 근데 여기서 새로 객체를 만들어서 할당하지 않으면 계속 같은 객체 참조,,
+
+    let movieData = data.find( element => element.id === movieId); //객체 가져옴
+
+    //여기서 object를 새로 만들어서 return 해주지 않고 기존 객체(movieData) 그 자체로 return 하면 주소값이 같아서 문제 발생,,
+    
     let movieObj = {
         "id" : movieData.id,
         "title" : movieData.title,

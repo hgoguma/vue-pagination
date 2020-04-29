@@ -69,9 +69,6 @@ export default {
             pageRange : [], //[startPage, endPage] 배열
         }
     },
-    created() {
-        console.log('pagination created!!');
-    },
     watch : {
         displayPageArray : {
             handler(newVal, oldVal) {
@@ -88,7 +85,6 @@ export default {
             immediate : true,
             deep : true,
             handler(newVal) {
-                console.log('pageOption handler watch!!');
                 this.pageOption = newVal;
                 this.currentPageIndex = 1;
                 this.setTotalPage();
