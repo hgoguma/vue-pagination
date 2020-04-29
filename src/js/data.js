@@ -129,9 +129,9 @@ const modifyData = (modifiedData) => { //data 객체가 들어옴
 }
 
 module.exports = {
-    fetchData : fetchData,
-    saveData : saveData,
-    deleteData : deleteData,
-    getMovieData : getMovieData,
-    modifyData : modifyData,
+    fetchData,
+    saveData,
+    deleteData,
+    getMovieData,
+    modifyData,
 }

@@ -6,21 +6,20 @@
         <PageOption @setPageOption="setPageOption" />
           
 
-        <Form v-if="this.pageOption != null" @submitForm="submitForm"/>
+        <Form @submitForm="submitForm"/>
 
         <!--List-->
-        <List v-if="this.pageOption !== null" :movieData="movieData" @onclickDelete="onclickDelete" />
+        <List  :movieData="movieData" @onclickDelete="onclickDelete" />
         
         <!-- Pagination -->
         <Pagination 
-          v-if="this.pageOption !== null"
           :totalData="this.totalData" 
           :pageOption="this.pageOption" 
           @changePage="changePage"
         />
 
         <!--수정 모달창 --> 
-        <ModifyModal v-if="this.pageOption !== null" @modified="modified" />
+        <ModifyModal @modified="modified" />
     </div>
 </template>
 
@@ -48,7 +47,16 @@ export default {
         totalData : 0, //총 데이터 개수
         pageOption : null,
         movieData : [],
+        defaultOption : {
+          pageCount : 5,
+          dataPerPage : 10,
+        },
     }
+  },
+  created() {
+    console.log('Home created!!');
+    this.pageOption = this.defaultOption;
+    this.fetchDataFromJs(1);
   },
   methods : {
       fetchDataFromJs(currentPageIndex) {
