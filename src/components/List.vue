@@ -1,7 +1,7 @@
 <template>
     <b-container class="mb-2">
         <b-row cols="5" cols-md="4" cols-xl="5">
-            <b-col md="3" v-for="(data) in movieData" :key="data.id">
+            <b-col md="3" v-for="(data) in this.movieData" :key="data.id">
                 <b-card
                     :title="data.title"
                     :img-src="data.poster_path"
@@ -21,21 +21,27 @@
 
 <script>
 import { eventBus } from '../main.js'
+import { mapState } from 'vuex' 
 const { deleteData } = require('../js/data.js');
 
 export default {
-    props: {
-        movieData : {
-            required : true,
-            type : Array
-        }
-    },
+    // props: {
+    //     movieData : {
+    //         required : true,
+    //         type : Array
+    //     }
+    // },
     data () {
         return {
             movieId : '',
         }
     },
-    methods : {
+    computed: {
+        ...mapState({
+            movieData : state => state.movieData.movieData,
+        })
+    },
+    methods: {
         onclickDelete(id) {
             deleteData(id);
             alert('삭제 되었습니다.');

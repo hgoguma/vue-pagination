@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
-import BootstrapVue from 'bootstrap-vue';
+import store from '../src/store/index.js'
+import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Pagination from './components/Pagination.vue'
@@ -35,4 +36,5 @@ export const eventBus = new Vue({
 new Vue({
   render: h => h(App),
   router,
+  store,
 }).$mount('#app')
