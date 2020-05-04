@@ -48,10 +48,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 
 export default {
     props: {
+        totalData : {
+            required : true,
+            type : Number
+        },
         pageOption : {
             required : true,
             type : Object
@@ -66,11 +69,6 @@ export default {
             hasPrevPage : false, //이전 더보기 버튼 여부
             pageRange : [], //[startPage, endPage] 배열
         }
-    },
-    computed : {
-        ...mapState({
-            totalData : state => state.movieData.totalData,
-        })
     },
     watch : {
         displayPageArray : {
@@ -88,6 +86,8 @@ export default {
             immediate : true,
             deep : true,
             handler(newVal) {
+                console.log('pagination 왓치!!');
+                console.log('뉴발?', newVal);
                 this.pageOption = newVal;
                 this.currentPageIndex = 1;
                 this.setTotalPage();

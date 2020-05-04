@@ -36,29 +36,31 @@ const makeDataArray = (totalData) => {
 
 let newArray = makeDataArray(totalData);
 
-const fetchData = (currentPageIndex, pageOption) => {
+const fetchData = (data) => {
+
+    console.log('fetchData API????'); //currentPageIndex, pageOption
+    console.log(data);
+
     
     //let array = makeDataArray(totalData); //totalData 개수 만큼 배열 만듦
 
     //데이터를 dataPerPage 만큼 끊어서 새로 배열 만들기
 
-
-
     let resultArray = []; //ex ) [ [1,2,3,4,5], [6,7,8,9,10], [11,12,13] ]...
 
-    let totalPage = Math.ceil(totalData/pageOption.dataPerPage); //총 페이지 개수
+    let totalPage = Math.ceil(totalData/data.pageOption.dataPerPage); //총 페이지 개수
 
     for(let i = 0; i < totalPage; i++) {
-        let k = i * Number(pageOption.dataPerPage);
-        let j = k+Number(pageOption.dataPerPage);
+        let k = i * Number(data.pageOption.dataPerPage);
+        let j = k+Number(data.pageOption.dataPerPage);
         let  arr = newArray.slice(k, j);
         resultArray.push(arr);
     }
 
     let dummyData = {
-        "currentPageIndex" : currentPageIndex,
+        "currentPageIndex" : data.currentPageIndex,
         "totalData" : totalData,
-        "results" : resultArray[currentPageIndex-1]
+        "results" : resultArray[data.currentPageIndex-1]
     }
         
     return dummyData;

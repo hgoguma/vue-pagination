@@ -15,8 +15,6 @@ const getters = {
 // mutations
 const mutations = {
     setPageOption(state, data) {
-        console.log('mutation?');
-        console.log(data);
         state.pageOption = data;
     }
 }
@@ -24,9 +22,6 @@ const mutations = {
 // actions
 const actions = {
     setPageOption(context, payload) {
-        console.log('setPageOption!');
-        console.log(payload);
-        //let data = fetchData(payload.currentPageIndex, payload.pageOption);
         context.commit('setPageOption', payload);
     }
 }

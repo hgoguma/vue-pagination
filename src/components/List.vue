@@ -21,25 +21,19 @@
 
 <script>
 import { eventBus } from '../main.js'
-import { mapState } from 'vuex' 
 const { deleteData } = require('../js/data.js');
 
 export default {
-    // props: {
-    //     movieData : {
-    //         required : true,
-    //         type : Array
-    //     }
-    // },
+    props: {
+        movieData : {
+            required : true,
+            type : Array
+        },
+    },
     data () {
         return {
             movieId : '',
         }
-    },
-    computed: {
-        ...mapState({
-            movieData : state => state.movieData.movieData,
-        })
     },
     methods: {
         onclickDelete(id) {

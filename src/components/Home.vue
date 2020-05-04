@@ -9,11 +9,12 @@
         <!-- <Form @submitForm="submitForm"/> -->
 
         <!-- List -->
-        <List @onclickDelete="onclickDelete" />
+        <List :movieData="movieData" @onclickDelete="onclickDelete" />
         
         <!-- Pagination -->
         <Pagination 
-          :page-option="this.payload.pageOption"
+          :totalData="totalData"
+          :pageOption="pageOption"
           @changePage="changePage"
         />
 
@@ -30,7 +31,12 @@ import List from './List.vue'
 import Pagination from './Pagination.vue'
 import ModifyModal from './ModifyModal.vue'
 
-const { fetchData } = require('../js/data.js');
+//const { fetchData } = require('../js/data.js');
+
+const defaultOption = {
+  pageCount : 5,
+  dataPerPage : 10,
+};
 
 export default {
   components: {
@@ -43,31 +49,23 @@ export default {
   },
   data() {
     return {
-        payload : {
+        options : {
           currentPageIndex : 0,
           pageOption : {}
-        },
-        defaultOption : {
-          pageCount : 5,
-          dataPerPage : 10,
         },
     }
   },
   created() {
-    this.payload.currentPageIndex = 1;
-    this.payload.pageOption = this.defaultOption;
-    this.setData();
-    //console.log('setPageOption 하자!');
-    //console.log(this.payload.pageOption);
-    this.setPageOption();
+    this.options.currentPageIndex = 1;
+    this.options.pageOption = defaultOption;
+    this.fetchData(this.options);
   },
   computed : {
-
-    movieData : {
-      get() { return this.$store.state.movieData.movieData }
-    },
     totalData : {
       get() { return this.$store.state.movieData.totalData }
+    },
+    movieData : {
+      get() { return this.$store.state.movieData.movieData }
     },
     pageOption : {
       get() { return this.$store.state.pageOption.pageOption }
@@ -75,22 +73,32 @@ export default {
   },
   methods : {
       setData() {
-        this.$store.dispatch('movieData/setData', this.payload)
+        this.$store.dispatch('movieData/setData', this.options);
       },
-      setPageOption() {
-        this.$store.dispatch('pageOption/setPageOption', this.payload.pageOption)
+      setPageOption(pageOption) {
+        //넘어오는 파라미터가 없으면 default 파라미터 보내기 / 있으면 파라미터로 넘기기
+        //pageOption == null || undefined ? pageOption = this.options.pageOption : pageOption;
+        this.$store.dispatch('pageOption/setPageOption', pageOption);
+        //this.$store.dispatch('movieData/setData', pageOption);
+        this.options.currentPageIndex = 1;
+        this.options.pageOption = pageOption;
+        this.fetchData(this.options);
       },
-      
-      fetchDataFromJs(currentPageIndex) {
+      fetchData(options) {
+        this.$store.commit('movieData/initMovieData');
+        this.$store.dispatch('movieData/setData', options);
+      },
+      fetchDataFromJs() {
         //기존 데이터 비우기
         //this.movieData = [];
-        let data = fetchData(currentPageIndex, this.pageOption);
-        //this.$store.dispatch('movieData/setData', currentPageIndex, this.pageOption);
+        //let data = fetchData(currentPageIndex, this.pageOption);
         //this.movieData = data.results;
-        this.totalData = data.totalData;
+        //this.totalData = data.totalData;
       },
       changePage(currentPageIndex) {
-        this.fetchDataFromJs(currentPageIndex);
+        this.options.currentPageIndex = currentPageIndex;
+        this.fetchData(this.options);
+        //this.fetchDataFromJs(currentPageIndex);
       },
       // setPageOption(pageOption) {
       //   this.pageOption = pageOption;
