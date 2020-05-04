@@ -46,14 +46,12 @@
         </div>
     </b-container>
 </template>
+
 <script>
+import { mapState } from 'vuex'
 
 export default {
     props: {
-        totalData : {
-            required : true,
-            type : Number
-        },
         pageOption : {
             required : true,
             type : Object
@@ -68,6 +66,11 @@ export default {
             hasPrevPage : false, //이전 더보기 버튼 여부
             pageRange : [], //[startPage, endPage] 배열
         }
+    },
+    computed : {
+        ...mapState({
+            totalData : state => state.movieData.totalData,
+        })
     },
     watch : {
         displayPageArray : {

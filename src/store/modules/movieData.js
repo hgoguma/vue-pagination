@@ -3,6 +3,7 @@ const { fetchData } = require('../../js/data.js');
 
 // initial state
 const state = () => ({
+    totalData : 0,
     movieData : [],
 })
 
@@ -15,17 +16,17 @@ const getters = {
 
 // mutations
 const mutations = {
-    setData(state, movieData) {
-        state.movieData = movieData;
+    setData(state, data) {
+        state.totalData = data.totalData;
+        state.movieData = data.results;
     }
 }
-
 
 // actions
 const actions = {
     setData(context, payload) {
-        let fetchedData = fetchData(payload.currentPageIndex, payload.pageOption);
-        context.commit('setData', fetchedData.results);
+        let data = fetchData(payload.currentPageIndex, payload.pageOption);
+        context.commit('setData', data);
     }
 }
 

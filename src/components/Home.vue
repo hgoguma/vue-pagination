@@ -13,8 +13,7 @@
         
         <!-- Pagination -->
         <Pagination 
-          :total-data="this.totalData" 
-          :page-option="this.pageOption" 
+          :page-option="this.payload.pageOption"
           @changePage="changePage"
         />
 
@@ -30,7 +29,6 @@ import PageOption from './PageOption.vue'
 import List from './List.vue'
 import Pagination from './Pagination.vue'
 import ModifyModal from './ModifyModal.vue'
-import { mapState, mapActions } from 'vuex' 
 
 const { fetchData } = require('../js/data.js');
 
@@ -45,9 +43,10 @@ export default {
   },
   data() {
     return {
-        totalData : 0, //총 데이터 개수
-        pageOption : null,
-        //movieData : [],
+        payload : {
+          currentPageIndex : 0,
+          pageOption : {}
+        },
         defaultOption : {
           pageCount : 5,
           dataPerPage : 10,
@@ -55,32 +54,33 @@ export default {
     }
   },
   created() {
-    this.pageOption = this.defaultOption;
-    //this.fetchDataFromJs(1);
-    let payload = {
-      currentPageIndex : 1,
-      pageOption : this.pageOption
-    }
-    this.setData(payload);
+    this.payload.currentPageIndex = 1;
+    this.payload.pageOption = this.defaultOption;
+    this.setData();
+    //console.log('setPageOption 하자!');
+    //console.log(this.payload.pageOption);
+    this.setPageOption();
   },
   computed : {
-    ...mapState({
-      movieData : state => state.movieData.movieData,
-    })
-    // movieDataFromStore : {
-    //   get : function() {
-    //     return this.movieData === this.$store.state.movieData.data
-    //   },
-    //   set : function() {
-    //     console.log('set!!')
-    //     this.$store.dispatch('movieData/setData', 1, this.pageOption);
-    //   }
-    // }
+
+    movieData : {
+      get() { return this.$store.state.movieData.movieData }
+    },
+    totalData : {
+      get() { return this.$store.state.movieData.totalData }
+    },
+    pageOption : {
+      get() { return this.$store.state.pageOption.pageOption }
+    }
   },
   methods : {
-      ...mapActions({
-        setData : 'movieData/setData'
-      }),
+      setData() {
+        this.$store.dispatch('movieData/setData', this.payload)
+      },
+      setPageOption() {
+        this.$store.dispatch('pageOption/setPageOption', this.payload.pageOption)
+      },
+      
       fetchDataFromJs(currentPageIndex) {
         //기존 데이터 비우기
         //this.movieData = [];
@@ -92,10 +92,10 @@ export default {
       changePage(currentPageIndex) {
         this.fetchDataFromJs(currentPageIndex);
       },
-      setPageOption(pageOption) {
-        this.pageOption = pageOption;
-        this.fetchDataFromJs(1);
-      },
+      // setPageOption(pageOption) {
+      //   this.pageOption = pageOption;
+      //   this.fetchDataFromJs(1);
+      // },
       // submitForm(formData) {
       //   saveData(formData);
       //   alert('등록되었습니다.');
