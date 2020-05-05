@@ -1,18 +1,12 @@
-const { fetchData } = require('../../js/data.js');
+const { fetchData, saveData } = require('../../js/data.js');
 
 
 // initial state
 const state = () => ({
     totalData : 0,
     movieData : [],
+    addDataSuccess : false,
 })
-
-// // getters
-// const getters = {
-//     getMovieData : (state) => {
-//         return state.movieData;
-//     }
-// }
 
 // mutations
 const mutations = {
@@ -22,6 +16,9 @@ const mutations = {
     setData(state, data) { 
         state.totalData = data.totalData;
         state.movieData = data.results;
+    },
+    addData(state, data) {
+        state.addDataSuccess = data;
     }
 }
 
@@ -30,13 +27,19 @@ const actions = {
     setData({commit}, payload) {
         let data = fetchData(payload);
         commit('setData', data);
+    },
+    addData({commit}, payload) {
+        //데이터 api에 연결해서 push 하기
+        let data = saveData(payload);
+        if(data == "success") {
+            commit('addData', true);
+        }
     }
 }
 
 export default {
     namespaced: true,
     state,
-    //getters,
     actions,
     mutations,
 }

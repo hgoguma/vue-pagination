@@ -35,18 +35,19 @@ export default {
     },
     computed: {
         ...mapState('page', {
-            currentPageIndex : state => state.currentPageIndex,
-            dataPerPageChanged : state => state.dataPerPageChanged,
-            pageChanged : state => state.pageChanged,
+            currentPageIndex: state => state.currentPageIndex,
+            dataPerPageChanged: state => state.dataPerPageChanged,
+            pageChanged: state => state.pageChanged,
         }),
         ...mapState('movieData', {
-            movieData : state => state.movieData,
+            movieData: state => state.movieData,
+            addDataSuccess: state => state.addDataSuccess,
         }),
         ...mapGetters({
-            pageOption : 'page/getPageOption'
+            pageOption: 'page/getPageOption'
         }),
     },
-    watch : {
+    watch: {
         dataPerPageChanged: {
             deep: true,
             immediate: true,
@@ -66,6 +67,14 @@ export default {
                     this.fetchData();
                     this.$store.commit('page/pageChanged', false);
                     return;
+                }
+            }
+        },
+        addDataSuccess: {
+            handler(newVal) {
+                if(newVal) {
+                    this.fetchData();
+                    this.$store.commit('movieData/addData', false);
                 }
             }
         }

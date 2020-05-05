@@ -9,26 +9,24 @@
         </b-form>
     </b-container>
 </template>
-
 <script>
 export default {
     data() {
         return {
-            form : {
-                title : '',
-                original_title : '',
+            form: {
+                title: '',
+                original_title: '',
             },
         }
     },
-    methods : {
+    methods: {
         submitForm() {
             //공백 처리
             if(!this.form.title || !this.form.original_title) {
                 alert('입력해주세요');
                 return;
             }
-            //emit
-            this.$emit('submitForm', this.form);
+            this.$store.dispatch('movieData/addData', this.form); //api로 넘겨주기
             this.form = {};
         }
     }

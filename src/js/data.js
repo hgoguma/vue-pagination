@@ -38,8 +38,8 @@ let newArray = makeDataArray(totalData);
 
 const fetchData = (data) => {
 
-    //console.log('fetchData API????'); //currentPageIndex, pageOption
-    //console.log(data);
+    console.log('fetchData API'); //currentPageIndex, pageOption
+    console.log(data);
 
     
     //let array = makeDataArray(totalData); //totalData 개수 만큼 배열 만듦
@@ -95,6 +95,8 @@ const saveData = (formData) => {
 
     //전체 데이터 개수 올리기
     totalData++;
+
+    return "success";
 }
 
 const deleteData = (id) => {

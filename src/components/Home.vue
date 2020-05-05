@@ -5,8 +5,8 @@
          <!-- Pagination Option @changePageOption="changePageOption"-->
         <PageOption  />
           
-        <!-- Form -->
-        <Form @submitForm="submitForm"/>
+        <!-- Form @submitForm="submitForm" -->
+        <Form />
 
         <!-- List -->
         <List @onclickDelete="onclickDelete" />
