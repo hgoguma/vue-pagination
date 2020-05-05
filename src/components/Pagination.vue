@@ -48,27 +48,37 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex';
 
 export default {
-    props: {
-        totalData : {
-            required : true,
-            type : Number
-        },
-        pageOption : {
-            required : true,
-            type : Object
-        },
-    },
     data() {
         return {
-            currentPageIndex : 1,
             totalPage : 0,
             displayPageArray : [], //실제 보여주는 페이지 범위
             hasMorePage : false, //더보기 버튼 여부
             hasPrevPage : false, //이전 더보기 버튼 여부
             pageRange : [], //[startPage, endPage] 배열
         }
+    },
+    created() {
+        this.setTotalPage();
+        this.chagePageAndSetPagination(this.currentPageIndex);
+    },
+    computed : {
+        currentPageIndex : {
+            get() { return this.$store.state.page.currentPageIndex },
+            set(value) {  return this.$store.commit('page/currentPageIndex', value) },
+        },
+        ...mapState('page', {
+            // currentPageIndex : state => state.currentPageIndex,
+            pageCountChanged : state => state.pageCountChanged,
+        }),
+        ...mapState('movieData', {
+            totalData : state => state.totalData,
+        }),
+        ...mapGetters({
+            pageOption : 'page/getPageOption'
+        }),
     },
     watch : {
         displayPageArray : {
@@ -82,17 +92,16 @@ export default {
                 }
             }
         },
-        pageOption : {
+        pageCountChanged : {
             immediate : true,
             deep : true,
             handler(newVal) {
-                console.log('pagination 왓치!!');
-                console.log('뉴발?', newVal);
-                this.pageOption = newVal;
-                this.currentPageIndex = 1;
-                this.setTotalPage();
-                this.chagePageAndSetPagination(this.currentPageIndex);
-                return;
+                if(newVal) {
+                    this.setTotalPage();
+                    this.chagePageAndSetPagination(this.currentPageIndex);
+                    this.$store.commit('page/pageCountChanged', false);
+                    return;
+                }
             }
         },
     },
@@ -128,16 +137,16 @@ export default {
             this.pageRange.push(startPage, endPage);
         },
         chagePageAndSetPagination(currentPageIndex) {
-            this.$emit('changePage', currentPageIndex);
             this.setPageRange(currentPageIndex);
             this.setPagination(this.pageRange[0]);
+            this.$store.commit('page/pageChanged', true); //페이지가 변경되었음을 알림
         },
         setTotalPage() {
             this.totalPage = Math.ceil(this.totalData/this.pageOption.dataPerPage);
         },
         //click 이벤트 함수
         changePage(pageIndex) {
-            this.currentPageIndex = pageIndex;
+            this.currentPageIndex = pageIndex; //현재 페이지 상태를 변경해줌
             this.chagePageAndSetPagination(this.currentPageIndex);
         },
         firstPage() {

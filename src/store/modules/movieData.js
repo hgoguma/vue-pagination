@@ -7,20 +7,19 @@ const state = () => ({
     movieData : [],
 })
 
-// getters
-const getters = {
-    getMovieData : (state) => {
-        return state.movieData;
-    }
-}
+// // getters
+// const getters = {
+//     getMovieData : (state) => {
+//         return state.movieData;
+//     }
+// }
 
 // mutations
 const mutations = {
-    initMovieData(state) {
-        console.log('initMovieData!');
+    initMovieData(state) { //movieData 초기화
         state.movieData = [];
     },
-    setData(state, data) {
+    setData(state, data) { 
         state.totalData = data.totalData;
         state.movieData = data.results;
     }
@@ -28,16 +27,16 @@ const mutations = {
 
 // actions
 const actions = {
-    setData(context, payload) {
+    setData({commit}, payload) {
         let data = fetchData(payload);
-        context.commit('setData', data);
+        commit('setData', data);
     }
 }
 
 export default {
     namespaced: true,
     state,
-    getters,
+    //getters,
     actions,
     mutations,
 }

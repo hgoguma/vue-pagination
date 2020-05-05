@@ -2,20 +2,18 @@
     <div>
         <!--Header-->
         <Header />
-         <!-- Pagination Option -->
-        <PageOption @setPageOption="setPageOption" />
+         <!-- Pagination Option @changePageOption="changePageOption"-->
+        <PageOption  />
           
         <!-- Form -->
-        <!-- <Form @submitForm="submitForm"/> -->
+        <Form @submitForm="submitForm"/>
 
         <!-- List -->
-        <List :movieData="movieData" @onclickDelete="onclickDelete" />
+        <List @onclickDelete="onclickDelete" />
         
-        <!-- Pagination -->
+        <!-- Pagination @changePage="changePage" -->
         <Pagination 
-          :totalData="totalData"
-          :pageOption="pageOption"
-          @changePage="changePage"
+          
         />
 
         <!-- 수정 모달창 --> 
@@ -26,67 +24,56 @@
 <script>
 import Header from './Header.vue'
 import PageOption from './PageOption.vue'
-//import Form from './Form.vue'
+import Form from './Form.vue'
 import List from './List.vue'
 import Pagination from './Pagination.vue'
 import ModifyModal from './ModifyModal.vue'
 
 //const { fetchData } = require('../js/data.js');
 
-const defaultOption = {
-  pageCount : 5,
-  dataPerPage : 10,
-};
-
 export default {
   components: {
     Header,
     PageOption,
-    //Form,
+    Form,
     List,
     Pagination,
     ModifyModal,
   },
-  data() {
-    return {
-        options : {
-          currentPageIndex : 0,
-          pageOption : {}
-        },
-    }
-  },
+  // data() {
+  //   return {
+  //       currentPageIndex : 0,
+  //       pageOption : {}
+  //   }
+  // },
   created() {
-    this.options.currentPageIndex = 1;
-    this.options.pageOption = defaultOption;
-    this.fetchData(this.options);
-  },
-  computed : {
-    totalData : {
-      get() { return this.$store.state.movieData.totalData }
-    },
-    movieData : {
-      get() { return this.$store.state.movieData.movieData }
-    },
-    pageOption : {
-      get() { return this.$store.state.pageOption.pageOption }
-    }
+    //1. 페이지 옵션에 따라 페이지네이션처리
+    //this.setPageOption();
+    //2. 페이지 옵션에 따라 뿌리는 데이터 가져오기
+    //this.fetchData();
+    //this.fetchData(this.options);
   },
   methods : {
-      setData() {
-        this.$store.dispatch('movieData/setData', this.options);
+      changePageOption() {
+        console.log('페이지 옵션 바꾸자!');
+        this.setPageOption();
+        this.fetchData();
       },
-      setPageOption(pageOption) {
+      setPageOption() {
+        console.log('setPageOption 함수!');
+        //console.log('페이지 옵션?', this.pageOption);
         //넘어오는 파라미터가 없으면 default 파라미터 보내기 / 있으면 파라미터로 넘기기
-        //pageOption == null || undefined ? pageOption = this.options.pageOption : pageOption;
-        this.$store.dispatch('pageOption/setPageOption', pageOption);
-        //this.$store.dispatch('movieData/setData', pageOption);
-        this.options.currentPageIndex = 1;
-        this.options.pageOption = pageOption;
-        this.fetchData(this.options);
+        //pageOption == null || undefined ? pageOption = this.pageOption : pageOption;
+        this.$store.dispatch('pageOption/setPageOption', this.pageOption);
       },
-      fetchData(options) {
-        this.$store.commit('movieData/initMovieData');
-        this.$store.dispatch('movieData/setData', options);
+      fetchData() {
+        //fetchData에서 하는 일 : 현재 페이지, 페이지 옵션 던져서 데이터 받아오기 -> state 변경
+        let option = {
+          currentPageIndex : this.currentPageIndex,
+          pageOption : this.pageOption
+        }
+        this.$store.commit('movieData/initMovieData'); //state 초기화
+        this.$store.dispatch('movieData/setData', option); //데이터 가져오기
       },
       fetchDataFromJs() {
         //기존 데이터 비우기
@@ -95,20 +82,6 @@ export default {
         //this.movieData = data.results;
         //this.totalData = data.totalData;
       },
-      changePage(currentPageIndex) {
-        this.options.currentPageIndex = currentPageIndex;
-        this.fetchData(this.options);
-        //this.fetchDataFromJs(currentPageIndex);
-      },
-      // setPageOption(pageOption) {
-      //   this.pageOption = pageOption;
-      //   this.fetchDataFromJs(1);
-      // },
-      // submitForm(formData) {
-      //   saveData(formData);
-      //   alert('등록되었습니다.');
-      //   this.fetchDataFromJs(1);
-      // },
       onclickDelete() {
         this.fetchDataFromJs(1);
       },

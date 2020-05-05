@@ -20,22 +20,66 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 import { eventBus } from '../main.js'
 const { deleteData } = require('../js/data.js');
 
 export default {
-    props: {
-        movieData : {
-            required : true,
-            type : Array
-        },
-    },
     data () {
         return {
             movieId : '',
         }
     },
+    created() {
+        this.fetchData();
+    },
+    computed: {
+        ...mapState('page', {
+            currentPageIndex : state => state.currentPageIndex,
+            dataPerPageChanged : state => state.dataPerPageChanged,
+            pageChanged : state => state.pageChanged,
+        }),
+        ...mapState('movieData', {
+            movieData : state => state.movieData,
+        }),
+        ...mapGetters({
+            pageOption : 'page/getPageOption'
+        }),
+    },
+    watch : {
+        dataPerPageChanged: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                if(newVal) {
+                    this.fetchData();
+                    this.$store.commit('page/dataPerPageChanged', false);
+                    return;
+                }
+            }
+        },
+        pageChanged: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                if(newVal) {
+                    this.fetchData();
+                    this.$store.commit('page/pageChanged', false);
+                    return;
+                }
+            }
+        }
+    },
     methods: {
+        fetchData() {
+            //fetchData에서 하는 일 : 현재 페이지, 페이지 옵션 던져서 데이터 받아오기 -> state 변경
+            let option = {
+                currentPageIndex : this.currentPageIndex,
+                pageOption : this.pageOption
+            }
+            this.$store.commit('movieData/initMovieData'); //state 초기화
+            this.$store.dispatch('movieData/setData', option); //데이터 가져오기
+        },
         onclickDelete(id) {
             deleteData(id);
             alert('삭제 되었습니다.');
@@ -47,6 +91,5 @@ export default {
             eventBus.modifyData(movieId);
         },
     }
-    
 }
 </script>
