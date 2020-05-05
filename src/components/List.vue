@@ -22,7 +22,6 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import { eventBus } from '../main.js'
-const { deleteData } = require('../js/data.js');
 
 export default {
     data () {
@@ -42,6 +41,7 @@ export default {
         ...mapState('movieData', {
             movieData: state => state.movieData,
             addDataSuccess: state => state.addDataSuccess,
+            modifySuccess: state => state.modifySuccess,
         }),
         ...mapGetters({
             pageOption: 'page/getPageOption'
@@ -74,10 +74,18 @@ export default {
             handler(newVal) {
                 if(newVal) {
                     this.fetchData();
-                    this.$store.commit('movieData/addData', false);
+                    this.$store.commit('movieData/addDataSuccess', false);
                 }
             }
-        }
+        },
+        modifySuccess: {
+            handler(newVal) {
+                if(newVal) {
+                    this.fetchData();
+                    this.$store.commit('movieData/modifySuccess', false);
+                }
+            }
+        },
     },
     methods: {
         fetchData() {
@@ -90,9 +98,8 @@ export default {
             this.$store.dispatch('movieData/setData', option); //데이터 가져오기
         },
         onclickDelete(id) {
-            deleteData(id);
+            this.$store.dispatch('movieData/deleteData', id);
             alert('삭제 되었습니다.');
-            this.$emit('onclickDelete');
         },
         onClickModify(movieId) {
             this.movieId = movieId;

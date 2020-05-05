@@ -75,10 +75,12 @@ export default {
         }),
         ...mapState('movieData', {
             totalData : state => state.totalData,
+            addDataSuccess : state => state.addDataSuccess,
         }),
         ...mapGetters({
             pageOption : 'page/getPageOption'
         }),
+        
     },
     watch : {
         displayPageArray : {

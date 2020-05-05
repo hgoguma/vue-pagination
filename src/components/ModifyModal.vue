@@ -8,10 +8,10 @@
     >
         <form>
             <b-form-group label="한글 타이틀" label-for="title">
-                <b-form-input v-model="modifyData.title" /> 
+                <b-form-input v-model="singleData.title" /> 
             </b-form-group>
             <b-form-group label="영어 타이틀" label-for="original_title">
-                <b-form-input v-model="modifyData.original_title" />
+                <b-form-input v-model="singleData.original_title" />
             </b-form-group>
         </form>
     </b-modal>
@@ -19,12 +19,11 @@
 
 <script>
 import { eventBus } from '../main.js'
-const { getMovieData, modifyData } = require('../js/data.js');
+import { mapActions, mapState } from 'vuex';
 
 export default {
     data() {
         return {
-            modifyData : {},
             showModal : false,
         }
     },
@@ -33,27 +32,31 @@ export default {
             this.showModal = true
         });
         eventBus.$on('modifyData', (movieId) => {
-            this.setMovieData(movieId);
+            this.getMovieData(movieId);
         });
     },
+    computed : {
+        ...mapState('movieData', {
+            singleData : state => state.singleData,
+        })
+    },
     methods : {
-        setMovieData(movieId) {
-            this.modifyData = getMovieData(movieId);
-            return;
-        },
+        ...mapActions('movieData', [
+            'getMovieData',
+            'modifyData'
+        ]),
         submitModalForm($event) {
             $event.preventDefault();
             //공백 처리
-            if(!this.modifyData.title || !this.modifyData.original_title) {
+            if(!this.singleData.title || !this.singleData.original_title) {
                 alert('입력해주세요');
                 return;
             }
-            modifyData(this.modifyData);
+            //action!
+            this.modifyData(this.singleData);
             alert('수정 되었습니다.');
             //창 닫기
             this.showModal = false;
-            //부모한테 전달
-            this.$emit('modified');
         },
     }
 }

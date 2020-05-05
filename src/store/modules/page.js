@@ -1,5 +1,3 @@
-//const { fetchData } = require('../../js/data.js');
-
 // initial state
 const state = () => ({
     currentPageIndex : 1,

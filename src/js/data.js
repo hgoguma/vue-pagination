@@ -38,10 +38,9 @@ let newArray = makeDataArray(totalData);
 
 const fetchData = (data) => {
 
-    console.log('fetchData API'); //currentPageIndex, pageOption
-    console.log(data);
+    //console.log('fetchData API'); //currentPageIndex, pageOption
+    //console.log(data);
 
-    
     //let array = makeDataArray(totalData); //totalData 개수 만큼 배열 만듦
 
     //데이터를 dataPerPage 만큼 끊어서 새로 배열 만들기
@@ -103,6 +102,8 @@ const deleteData = (id) => {
     //for문 돌면서 id값이랑 일치하는 거 찾아서 배열에서 삭제
     newArray = newArray.filter(element => element.id !== id);
     totalData--;
+
+    return "success";
 }
 
 const getMovieData = (movieId) => {
@@ -122,13 +123,17 @@ const getMovieData = (movieId) => {
 }
 
 const modifyData = (modifiedData) => { //data 객체가 들어옴
+
     //배열(data)에서 값 찾아서 수정
     let data_index = data.findIndex( element => element.id === modifiedData.id ); //해당되는 배열의 index 가져오기
+    console.log('원본 data?', data[data_index]);
     data[data_index] = modifiedData;
 
     //뿌리는 배열(newArray)에서 값 찾아서 수정
     let newArray_index = newArray.findIndex( element => element.id === modifiedData.id ); //해당되는 배열의 index 가져오기
     newArray[newArray_index] = modifiedData;
+
+    return "success";
 
 }
 

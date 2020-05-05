@@ -9,7 +9,7 @@
         <Form />
 
         <!-- List -->
-        <List @onclickDelete="onclickDelete" />
+        <List />
         
         <!-- Pagination @changePage="changePage" -->
         <Pagination 
@@ -17,7 +17,7 @@
         />
 
         <!-- 수정 모달창 --> 
-        <ModifyModal @modified="modified" />
+        <ModifyModal />
     </div>
 </template>
 
@@ -82,12 +82,6 @@ export default {
         //this.movieData = data.results;
         //this.totalData = data.totalData;
       },
-      onclickDelete() {
-        this.fetchDataFromJs(1);
-      },
-      modified() {
-        this.fetchDataFromJs(1);
-      }
   }
 }
 </script>
