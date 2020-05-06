@@ -38,43 +38,44 @@ const mutations = {
 
 // actions
 const actions = {
-    initMovieData({commit}) { //movieData 초기화
+    initMovieDataRequest({commit}) { //movieData 초기화
         commit('initMovieData');
     },
-    initSingleData({commit}) { //movieData 초기화
+    initSingleDataRequest({commit}) { //movieData 초기화
         commit('initSingleData');
     },
-    setData({commit}, payload) {
+    setDataRequest({commit}, payload) {
         let data = fetchData(payload);
         commit('setData', data);
     },
-    addData({commit}, payload) {
+    addDataRequest({dispatch}, payload) {
         let data = saveData(payload);
         if(data == "success") {
-            commit('addDataSuccess', true);
+            dispatch('setAddDataSuccessRequest', true);
         }
     },
-    addDataRequest({commit}, payload) {
+    setAddDataSuccessRequest({commit}, payload) {
         commit('addDataSuccess', payload);
     },
-    deleteData({commit}, payload) {
+
+    deleteDataRequest({commit}, payload) {
         let data = deleteData(payload);
         if(data == "success") {
             commit('deleteData', payload);
         }
     },
-    getMovieData({commit}, payload) {
+    getMovieDataRequest({commit}, payload) {
         let data = getMovieData(payload);
         commit('singleData', data);
     },
-    modifyData({commit}, payload) {
+    modifyDataRequest({dispatch}, payload) {
         let data = modifyData(payload);
         if(data == "success") {
-            commit('modifySuccess', true);
-            commit('initSingleData');
+            dispatch('setModifySuccessRequest', true);
+            dispatch('initSingleDataRequest');
         }
     },
-    modifyDataRequest({commit}, payload) {
+    setModifySuccessRequest({commit}, payload) {
         commit('modifySuccess', payload);
     },
 }

@@ -23,7 +23,7 @@ export default {
     },
     methods: {
         ...mapActions('movieData', [
-            'addData',
+            'addDataRequest',
         ]),
         submitForm() {
             //공백 처리
@@ -31,7 +31,7 @@ export default {
                 alert('입력해주세요');
                 return;
             }
-            this.addData(this.form);
+            this.addDataRequest(this.form);
             this.form = {};
         }
     }

@@ -74,7 +74,7 @@ export default {
             handler(newVal) {
                 if(newVal) {
                     this.fetchData();
-                    this.addDataRequest(false);
+                    this.setAddDataSuccessRequest(false);
                 }
             }
         },
@@ -82,18 +82,18 @@ export default {
             handler(newVal) {
                 if(newVal) {
                     this.fetchData();
-                    this.modifyDataRequest(false);
+                    this.setModifySuccessRequest(false);
                 }
             }
         },
     },
     methods: {
         ...mapActions('movieData', [
-            'initMovieData',
-            'setData',
-            'deleteData',
-            'addDataRequest',
-            'modifyDataRequest',
+            'initMovieDataRequest',
+            'setDataRequest',
+            'deleteDataRequest',
+            'setAddDataSuccessRequest',
+            'setModifySuccessRequest',
         ]),
         ...mapActions('page', [
             'dataPerPageChangeRequest',
@@ -105,11 +105,11 @@ export default {
                 currentPageIndex : this.currentPageIndex,
                 pageOption : this.pageOption
             }
-            this.initMovieData();
-            this.setData(option);
+            this.initMovieDataRequest();
+            this.setDataRequest(option);
         },
         onclickDelete(id) {
-            this.deleteData(id);
+            this.deleteDataRequest(id);
             alert('삭제 되었습니다.');
         },
         onClickModify(movieId) {

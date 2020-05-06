@@ -32,7 +32,7 @@ export default {
             this.showModal = true
         });
         eventBus.$on('modifyData', (movieId) => {
-            this.getMovieData(movieId);
+            this.getMovieDataRequest(movieId);
         });
     },
     computed : {
@@ -42,8 +42,9 @@ export default {
     },
     methods : {
         ...mapActions('movieData', [
-            'getMovieData',
-            'modifyData'
+            'getMovieDataRequest',
+            'modifyDataRequest',
+            'initSingleDataRequest',
         ]),
         submitModalForm($event) {
             $event.preventDefault();
@@ -53,8 +54,10 @@ export default {
                 return;
             }
             //action!
-            this.modifyData(this.singleData);
+            this.modifyDataRequest(this.singleData);
             alert('수정 되었습니다.');
+            //singleData state 초기화
+            this.initSingleDataRequest();
             //창 닫기
             this.showModal = false;
         },
