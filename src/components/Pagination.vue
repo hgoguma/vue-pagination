@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
     data() {
@@ -64,22 +64,29 @@ export default {
         this.setTotalPage();
         this.chagePageAndSetPagination(this.currentPageIndex);
     },
+    mounted() {
+        console.log('pagenation mounted!!');
+    },
     computed : {
         currentPageIndex : {
             get() { return this.$store.state.page.currentPageIndex },
             set(value) {  return this.$store.commit('page/currentPageIndex', value) },
         },
         ...mapState('page', {
-            // currentPageIndex : state => state.currentPageIndex,
             pageCountChanged : state => state.pageCountChanged,
         }),
         ...mapState('movieData', {
             totalData : state => state.totalData,
             addDataSuccess : state => state.addDataSuccess,
         }),
-        ...mapGetters({
-            pageOption : 'page/getPageOption'
-        }),
+        pageOption : {
+            get() {
+                return this.$store.getters['page/getPageOption']
+            },
+            set(newVal) {
+                return this.$store.dispatch('page/setPageOptionRequest', newVal);
+            }
+        },
     },
     watch : {
         displayPageArray : {

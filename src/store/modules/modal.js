@@ -15,7 +15,6 @@ const actions = {
         dispatch('movieData/getMovieDataRequest', payload, {root:true});
     },
     closeModalRequest({commit}) {
-        console.log('모달 창 닫는 액션!')
         commit('modalVisible', false);
     }
 }

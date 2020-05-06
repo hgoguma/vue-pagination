@@ -1,6 +1,8 @@
 // initial state
 const state = {
     currentPageIndex : 1,
+    // pageCount : 5,
+    // dataPerPage : 10,
     pageOption : {
         pageCount : 5,
         dataPerPage : 10,
@@ -16,6 +18,12 @@ const getters = {
         state.pageOption.pageCount = Number(state.pageOption.pageCount);
         state.pageOption.dataPerPage = Number(state.pageOption.dataPerPage);
         return state.pageOption
+    },
+    getPageCount(state) {
+        return state.pageCount = Number(state.pageCount);
+    },
+    getDataPerPage(state) {
+        return state.dataPerPage = Number(state.dataPerPage);
     }
 }
 
@@ -30,6 +38,8 @@ const mutations = {
     setPageOption(state, data) {
         state.pageOption = data;
     },
+    //
+
     pageCountChanged(state, data) {
         state.pageCountChanged = data;
     },
@@ -38,7 +48,7 @@ const mutations = {
     },
     pageChanged(state, data) {
         state.pageChanged = data;
-    }
+    },
 }
 
 const actions = {

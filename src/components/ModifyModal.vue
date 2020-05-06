@@ -26,9 +26,10 @@ export default {
             singleData : state => state.singleData,
             movieId : state => state.movieId,
         }),
-        ...mapState('modal', {
-            modalVisible : state => state.modalVisible,
-        })
+        modalVisible : {
+            get() { return this.$store.state.modal.modalVisible }, 
+            set(value) { return this.$store.commit('modal/modalVisible', value)}
+        }
     },
     methods : {
         ...mapActions('movieData', [

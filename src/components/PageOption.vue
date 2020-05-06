@@ -23,9 +23,17 @@
     </b-container>
 </template>
 <script>
-import { mapGetters, mapState, mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
+    created() {
+        console.log('페이지 옵션 created!!');
+
+    },
+    beforeMount() {
+        console.log('pagenation')
+    },
+    
     data() {
         return {
             // pageOption : {
@@ -46,13 +54,18 @@ export default {
         }
     },
     computed : {
-        ...mapGetters({
-            pageOption : 'page/getPageOption'
-        }),
+        pageOption : {
+            get() {
+                return this.$store.getters['page/getPageOption']
+            },
+            set(newVal) {
+                return this.$store.dispatch('page/setPageOptionRequest', newVal);
+            }
+        },
         ...mapState('page', {
             dataPerPageChanged : state => state.dataPerPageChanged,
             pageCountChanged : state => state.pageCountChanged,
-        }),
+        })
     },
     methods : {
         ...mapActions('page', [
@@ -68,8 +81,9 @@ export default {
                 return;
             }
             //pageOption 바뀌었음을 알리기
-            this.dataPerPageChangeRequest(true);
-            this.pageCountChangeRequest(true);
+            //this.dataPerPageChangeRequest(true);
+            //this.pageCountChangeRequest(true);
+            //console.log('클릭!!');
             this.initCurrentPageIndex(); //현재 페이지 1로 바꾸기(초기화)
             this.setPageOptionRequest(this.pageOption); //pageOption state 변경
         },
