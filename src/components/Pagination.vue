@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
     data() {
@@ -80,7 +80,6 @@ export default {
         ...mapGetters({
             pageOption : 'page/getPageOption'
         }),
-        
     },
     watch : {
         displayPageArray : {
@@ -101,13 +100,17 @@ export default {
                 if(newVal) {
                     this.setTotalPage();
                     this.chagePageAndSetPagination(this.currentPageIndex);
-                    this.$store.commit('page/pageCountChanged', false);
+                    this.pageCountChangeRequest(false);
                     return;
                 }
             }
         },
     },
     methods: {
+        ...mapActions('page', [
+            'pageCountChangeRequest',
+            'pageChangeRequest',
+        ]),
         //페이징 범위 처리하는 함수
         setPagination(startPage) {
             this.displayPageArray = []; 
@@ -141,7 +144,7 @@ export default {
         chagePageAndSetPagination(currentPageIndex) {
             this.setPageRange(currentPageIndex);
             this.setPagination(this.pageRange[0]);
-            this.$store.commit('page/pageChanged', true); //페이지가 변경되었음을 알림
+            this.pageChangeRequest(true); //페이지가 변경되었음을 알림
         },
         setTotalPage() {
             this.totalPage = Math.ceil(this.totalData/this.pageOption.dataPerPage);

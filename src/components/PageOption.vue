@@ -23,7 +23,7 @@
     </b-container>
 </template>
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
 
 export default {
     data() {
@@ -45,9 +45,6 @@ export default {
             // ],
         }
     },
-    created() {
-        //this.setPageOption();
-    },
     computed : {
         ...mapGetters({
             pageOption : 'page/getPageOption'
@@ -58,9 +55,12 @@ export default {
         }),
     },
     methods : {
-        setPageOption() {
-            this.$store.commit('page/setPageOption', this.pageOption); //pageOption state 변경
-        },
+        ...mapActions('page', [
+            'setPageOptionRequest',
+            'pageCountChangeRequest',
+            'dataPerPageChangeRequest',
+            'initCurrentPageIndex',
+        ]),
         changePageOption() {
             //공백 처리하기!
             if(!this.pageOption.pageCount || !this.pageOption.dataPerPage) {
@@ -68,11 +68,11 @@ export default {
                 return;
             }
             //pageOption 바뀌었음을 알리기
-            this.$store.commit('page/dataPerPageChanged', true);
-            this.$store.commit('page/pageCountChanged', true);
-            //현재 페이지 1로 바꾸기
-            this.$store.commit('page/initCurrentPageIndex');
-            this.setPageOption();
+            this.dataPerPageChangeRequest(true);
+            this.pageCountChangeRequest(true);
+
+            this.initCurrentPageIndex(); //현재 페이지 1로 바꾸기(초기화)
+            this.setPageOptionRequest(this.pageOption); //pageOption state 변경
         },
         checkValue($event) {
             //숫자 입력만 하게 만들기
@@ -80,7 +80,6 @@ export default {
                 $event.preventDefault();
             }
         }
-        
     }
 }
 </script>

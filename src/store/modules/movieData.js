@@ -38,6 +38,12 @@ const mutations = {
 
 // actions
 const actions = {
+    initMovieData({commit}) { //movieData 초기화
+        commit('initMovieData');
+    },
+    initSingleData({commit}) { //movieData 초기화
+        commit('initSingleData');
+    },
     setData({commit}, payload) {
         let data = fetchData(payload);
         commit('setData', data);
@@ -47,6 +53,9 @@ const actions = {
         if(data == "success") {
             commit('addDataSuccess', true);
         }
+    },
+    addDataRequest({commit}, payload) {
+        commit('addDataSuccess', payload);
     },
     deleteData({commit}, payload) {
         let data = deleteData(payload);
@@ -64,7 +73,10 @@ const actions = {
             commit('modifySuccess', true);
             commit('initSingleData');
         }
-    }
+    },
+    modifyDataRequest({commit}, payload) {
+        commit('modifySuccess', payload);
+    },
 }
 
 export default {

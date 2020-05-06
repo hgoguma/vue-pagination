@@ -10,6 +10,8 @@
     </b-container>
 </template>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
     data() {
         return {
@@ -20,13 +22,16 @@ export default {
         }
     },
     methods: {
+        ...mapActions('movieData', [
+            'addData',
+        ]),
         submitForm() {
             //공백 처리
             if(!this.form.title || !this.form.original_title) {
                 alert('입력해주세요');
                 return;
             }
-            this.$store.dispatch('movieData/addData', this.form); //api로 넘겨주기
+            this.addData(this.form);
             this.form = {};
         }
     }

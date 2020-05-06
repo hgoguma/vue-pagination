@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
 import { eventBus } from '../main.js'
 
 export default {
@@ -54,7 +54,7 @@ export default {
             handler(newVal) {
                 if(newVal) {
                     this.fetchData();
-                    this.$store.commit('page/dataPerPageChanged', false);
+                    this.dataPerPageChangeRequest(false);
                     return;
                 }
             }
@@ -65,7 +65,7 @@ export default {
             handler(newVal) {
                 if(newVal) {
                     this.fetchData();
-                    this.$store.commit('page/pageChanged', false);
+                    this.pageChangeRequest(false);
                     return;
                 }
             }
@@ -74,7 +74,7 @@ export default {
             handler(newVal) {
                 if(newVal) {
                     this.fetchData();
-                    this.$store.commit('movieData/addDataSuccess', false);
+                    this.addDataRequest(false);
                 }
             }
         },
@@ -82,23 +82,34 @@ export default {
             handler(newVal) {
                 if(newVal) {
                     this.fetchData();
-                    this.$store.commit('movieData/modifySuccess', false);
+                    this.modifyDataRequest(false);
                 }
             }
         },
     },
     methods: {
+        ...mapActions('movieData', [
+            'initMovieData',
+            'setData',
+            'deleteData',
+            'addDataRequest',
+            'modifyDataRequest',
+        ]),
+        ...mapActions('page', [
+            'dataPerPageChangeRequest',
+            'pageChangeRequest',
+        ]),
         fetchData() {
             //fetchData에서 하는 일 : 현재 페이지, 페이지 옵션 던져서 데이터 받아오기 -> state 변경
             let option = {
                 currentPageIndex : this.currentPageIndex,
                 pageOption : this.pageOption
             }
-            this.$store.commit('movieData/initMovieData'); //state 초기화
-            this.$store.dispatch('movieData/setData', option); //데이터 가져오기
+            this.initMovieData();
+            this.setData(option);
         },
         onclickDelete(id) {
-            this.$store.dispatch('movieData/deleteData', id);
+            this.deleteData(id);
             alert('삭제 되었습니다.');
         },
         onClickModify(movieId) {

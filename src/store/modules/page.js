@@ -41,9 +41,28 @@ const mutations = {
     }
 }
 
+const actions = {
+    initCurrentPageIndex({commit}) {
+        commit('initCurrentPageIndex');
+    },
+    setPageOptionRequest({commit}, payload) {
+        commit('setPageOption', payload);
+    },
+    pageCountChangeRequest({commit}, payload) {
+        commit('pageCountChanged', payload);
+    },
+    dataPerPageChangeRequest({commit}, payload) {
+        commit('dataPerPageChanged', payload);
+    },
+    pageChangeRequest({commit}, payload) {
+        commit('pageChanged', payload);
+    },
+}
+
 export default {
     namespaced: true,
     state,
     getters,
     mutations,
+    actions,
 }
