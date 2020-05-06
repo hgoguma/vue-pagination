@@ -11,10 +11,10 @@ const state = () => ({
 
 // mutations
 const mutations = {
-    initMovieData(state) { //movieData 초기화
+    initMovieData(state) {
         state.movieData = [];
     },
-    initSingleData(state) { //movieData 초기화
+    initSingleData(state) {
         state.singleData = {};
     },
     setData(state, data) { 
@@ -48,16 +48,15 @@ const actions = {
         let data = fetchData(payload);
         commit('setData', data);
     },
-    addDataRequest({dispatch}, payload) {
+    addDataRequest({commit}, payload) {
         let data = saveData(payload);
         if(data == "success") {
-            dispatch('setAddDataSuccessRequest', true);
+            commit('addDataSuccess', true);
         }
     },
     setAddDataSuccessRequest({commit}, payload) {
         commit('addDataSuccess', payload);
     },
-
     deleteDataRequest({commit}, payload) {
         let data = deleteData(payload);
         if(data == "success") {
@@ -68,11 +67,11 @@ const actions = {
         let data = getMovieData(payload);
         commit('singleData', data);
     },
-    modifyDataRequest({dispatch}, payload) {
+    modifyDataRequest({commit}, payload) {
         let data = modifyData(payload);
         if(data == "success") {
-            dispatch('setModifySuccessRequest', true);
-            dispatch('initSingleDataRequest');
+            commit('modifySuccess', true);
+            commit('initSingleData');
         }
     },
     setModifySuccessRequest({commit}, payload) {

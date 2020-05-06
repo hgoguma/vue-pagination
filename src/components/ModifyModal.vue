@@ -53,11 +53,11 @@ export default {
                 alert('입력해주세요');
                 return;
             }
-            //action!
-            this.modifyDataRequest(this.singleData);
+            
+            this.modifyDataRequest(this.singleData); //action!
             alert('수정 되었습니다.');
-            //singleData state 초기화
-            this.initSingleDataRequest();
+            
+            this.initSingleDataRequest(); //singleData state 초기화
             //창 닫기
             this.showModal = false;
         },
