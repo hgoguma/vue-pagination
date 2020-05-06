@@ -22,17 +22,6 @@ export const router = new VueRouter({
   routes
 });
 
-export const eventBus = new Vue({
-  methods: {
-    openModal() {
-      this.$emit('openModal')
-    },
-    modifyData(movieId) {
-      this.$emit('modifyData', movieId)
-    }
-  }
-});
-
 new Vue({
   render: h => h(App),
   router,

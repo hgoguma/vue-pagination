@@ -21,7 +21,6 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
-import { eventBus } from '../main.js'
 
 export default {
     data () {
@@ -99,6 +98,9 @@ export default {
             'dataPerPageChangeRequest',
             'pageChangeRequest',
         ]),
+        ...mapActions('modal', [
+            'showModalRequest',
+        ]),
         fetchData() {
             //fetchData에서 하는 일 : 현재 페이지, 페이지 옵션 던져서 데이터 받아오기 -> state 변경
             let option = {
@@ -114,8 +116,8 @@ export default {
         },
         onClickModify(movieId) {
             this.movieId = movieId;
-            eventBus.openModal();
-            eventBus.modifyData(movieId);
+            //modalVisible state 바꾸고 movieId 전달하는 액션 부르기
+            this.showModalRequest(movieId);
         },
     }
 }

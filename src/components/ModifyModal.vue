@@ -1,7 +1,7 @@
 <template>
     <b-modal
         title="수정"
-        v-model="showModal"
+        v-model="modalVisible"
         ok-title="수정"
         cancel-title="취소"
         @ok="submitModalForm($event)"
@@ -18,33 +18,25 @@
 </template>
 
 <script>
-import { eventBus } from '../main.js'
 import { mapActions, mapState } from 'vuex';
 
 export default {
-    data() {
-        return {
-            showModal : false,
-        }
-    },
-    created() {
-        eventBus.$on('openModal', () => { 
-            this.showModal = true
-        });
-        eventBus.$on('modifyData', (movieId) => {
-            this.getMovieDataRequest(movieId);
-        });
-    },
     computed : {
         ...mapState('movieData', {
             singleData : state => state.singleData,
+            movieId : state => state.movieId,
+        }),
+        ...mapState('modal', {
+            modalVisible : state => state.modalVisible,
         })
     },
     methods : {
         ...mapActions('movieData', [
-            'getMovieDataRequest',
             'modifyDataRequest',
             'initSingleDataRequest',
+        ]),
+        ...mapActions('modal', [
+            'closeModalRequest',
         ]),
         submitModalForm($event) {
             $event.preventDefault();
@@ -53,13 +45,10 @@ export default {
                 alert('입력해주세요');
                 return;
             }
-            
             this.modifyDataRequest(this.singleData); //action!
             alert('수정 되었습니다.');
-            
             this.initSingleDataRequest(); //singleData state 초기화
-            //창 닫기
-            this.showModal = false;
+            this.closeModalRequest(); //창 닫기
         },
     }
 }

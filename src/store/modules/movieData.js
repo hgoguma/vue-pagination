@@ -1,13 +1,13 @@
 const { fetchData, saveData, deleteData, getMovieData, modifyData } = require('../../js/data.js');
 
 // initial state
-const state = () => ({
+const state = {
     totalData : 0,
     movieData : [],
     singleData : {},
     addDataSuccess : false,
     modifySuccess : false,
-})
+}
 
 // mutations
 const mutations = {

@@ -70,7 +70,6 @@ export default {
             //pageOption 바뀌었음을 알리기
             this.dataPerPageChangeRequest(true);
             this.pageCountChangeRequest(true);
-
             this.initCurrentPageIndex(); //현재 페이지 1로 바꾸기(초기화)
             this.setPageOptionRequest(this.pageOption); //pageOption state 변경
         },

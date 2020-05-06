@@ -1,5 +1,5 @@
 // initial state
-const state = () => ({
+const state = {
     currentPageIndex : 1,
     pageOption : {
         pageCount : 5,
@@ -8,7 +8,7 @@ const state = () => ({
     pageCountChanged : false,
     dataPerPageChanged : false,
     pageChanged : false,
-})
+}
 
 //getter
 const getters = {
