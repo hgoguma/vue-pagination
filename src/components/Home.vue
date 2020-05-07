@@ -13,7 +13,7 @@
         <List />
         
         <!-- 페이징 처리 -->
-        <Pagination />
+        <Pagination @renderingPage="renderingPage" />
 
         <!-- 수정 모달창 --> 
         <ModifyModal />

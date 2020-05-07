@@ -104,42 +104,34 @@ export default {
         }
     },
     methods: {
-        //페이징 처리 함수
-        setPaginationAction() {
-            let payload = {
-                currentPageIndex : this.currentPageIndex,
-                pageOption : this.pageOption
-            }
-            this.$store.dispatch('page/chagePageAndSetPagination', payload);
-        },
         //click 이벤트 함수
         changePage(pageIndex) {
             this.currentPageIndex = pageIndex; //현재 페이지 상태를 변경해줌
-            this.setPaginationAction();
+            this.$emit('renderingPage');
         },
         firstPage() {
             this.currentPageIndex = 1;
-            this.setPaginationAction();
+            this.$emit('renderingPage');
         },
         prevPage() {
             this.currentPageIndex--;
-            this.setPaginationAction();
+            this.$emit('renderingPage');
         },
         nextPage() {
             this.currentPageIndex++;
-            this.setPaginationAction();
+            this.$emit('renderingPage');
         },
         lastPage() {
             this.currentPageIndex = this.totalPage;
-            this.setPaginationAction();
+            this.$emit('renderingPage');
         },
         loadMorePage() {
             this.currentPageIndex = this.pageRange[1] + 1;
-            this.setPaginationAction();
+            this.$emit('renderingPage');
         },
         loadPrevPage() {
             this.currentPageIndex = this.pageRange[0] - this.pageOption.pageCount;
-            this.setPaginationAction();
+            this.$emit('renderingPage');
         },
     }
 }
