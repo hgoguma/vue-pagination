@@ -23,17 +23,13 @@
     </b-container>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex';
-
 export default {
     created() {
-        console.log('페이지 옵션 created!!');
-
+        //this.$store.dispatch('page/setPageOptionRequest', this.pageOption);
     },
-    beforeMount() {
-        console.log('pagenation')
-    },
-    
+    // beforeUpdate() {
+    //     this.$store.dispatch('page/setPageOptionRequest', this.pageOption);
+    // },
     data() {
         return {
             // pageOption : {
@@ -62,30 +58,16 @@ export default {
                 return this.$store.dispatch('page/setPageOptionRequest', newVal);
             }
         },
-        ...mapState('page', {
-            dataPerPageChanged : state => state.dataPerPageChanged,
-            pageCountChanged : state => state.pageCountChanged,
-        })
     },
     methods : {
-        ...mapActions('page', [
-            'setPageOptionRequest',
-            'pageCountChangeRequest',
-            'dataPerPageChangeRequest',
-            'initCurrentPageIndex',
-        ]),
         changePageOption() {
             //공백 처리하기!
             if(!this.pageOption.pageCount || !this.pageOption.dataPerPage) {
                 alert('숫자를 입력해주세요');
                 return;
             }
-            //pageOption 바뀌었음을 알리기
-            //this.dataPerPageChangeRequest(true);
-            //this.pageCountChangeRequest(true);
-            //console.log('클릭!!');
-            this.initCurrentPageIndex(); //현재 페이지 1로 바꾸기(초기화)
-            this.setPageOptionRequest(this.pageOption); //pageOption state 변경
+            this.$store.dispatch('page/setPageOptionRequest', this.pageOption); //pageOption state 바꾸기
+            this.$emit('renderingPage');
         },
         checkValue($event) {
             //숫자 입력만 하게 만들기

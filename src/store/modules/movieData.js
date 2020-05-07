@@ -1,3 +1,4 @@
+import Vue from 'vue';
 const { fetchData, saveData, deleteData, getMovieData, modifyData } = require('../../js/data.js');
 
 // initial state
@@ -5,8 +6,12 @@ const state = {
     totalData : 0,
     movieData : [],
     singleData : {},
-    addDataSuccess : false,
-    modifySuccess : false,
+}
+
+const getters = {
+    getMovieData(state) {
+        return state.movieData;
+    }
 }
 
 // mutations
@@ -17,71 +22,79 @@ const mutations = {
     initSingleData(state) {
         state.singleData = {};
     },
-    setData(state, data) { 
+    setData(state, data) {
         state.totalData = data.totalData;
         state.movieData = data.results;
     },
-    addDataSuccess(state, data) {
-        state.addDataSuccess = data;
+    addData(state, data) {
+        state.totalData++;
+        state.movieData.unshift(data);
     },
     deleteData(state, id) {
         state.totalData--;
-        state.movieData = state.movieData.filter(element => element.id !== id);
+        let index = state.movieData.findIndex( element => element.id === id); //해당되는 배열의 index 가져오기
+        state.movieData.splice(index,1);
     },
     singleData(state, data) {
         state.singleData = data;
     },
-    modifySuccess(state, data) {
-        state.modifySuccess = data;
+    modifiedMovieData(state, modifiedData) {
+        let index = state.movieData.findIndex( element => element.id === modifiedData.id ); //해당되는 배열의 index 가져오기
+        Vue.set(state.movieData, index, modifiedData);
+        //Vue.set(수정할 state, key값 or index , 대체할 state)
+        //state.movieData[index] = modifiedData; -> 그냥 할당하면 vue가 state의 변화를 감지 못함.
     }
 }
 
 // actions
 const actions = {
-    initMovieDataRequest({commit}) { //movieData 초기화
-        commit('initMovieData');
+    initMovieDataRequest(context) { //movieData 초기화
+        context.commit('initMovieData');
     },
-    initSingleDataRequest({commit}) { //movieData 초기화
-        commit('initSingleData');
+
+    initSingleDataRequest(context) { //movieData 초기화
+        context.commit('initSingleData');
     },
-    setDataRequest({commit}, payload) {
-        let data = fetchData(payload);
-        commit('setData', data);
+
+    setDataRequest(context, pageOption) {
+        context.dispatch('initMovieDataRequest');
+        let data = fetchData(pageOption);
+        context.commit('setData', data);
     },
-    addDataRequest({commit}, payload) {
-        let data = saveData(payload);
-        if(data == "success") {
-            commit('addDataSuccess', true);
+
+    addDataRequest(context, payload) {
+        let result = saveData(payload);
+        if(result.result == "success" && result.id) {
+            let savedData = getMovieData(result.id); //API에서 다시 data 가져오기
+            context.commit('addData', savedData);
         }
     },
-    setAddDataSuccessRequest({commit}, payload) {
-        commit('addDataSuccess', payload);
-    },
-    deleteDataRequest({commit}, payload) {
+
+    deleteDataRequest(context, payload) {
         let data = deleteData(payload);
         if(data == "success") {
-            commit('deleteData', payload);
+            context.commit('deleteData', payload);
         }
     },
-    getMovieDataRequest({commit}, payload) {
+
+    getMovieDataRequest(context, payload) {
         let data = getMovieData(payload);
-        commit('singleData', data);
+        context.commit('singleData', data);
     },
-    modifyDataRequest({commit}, payload) {
-        let data = modifyData(payload);
+
+    modifyDataRequest(context, modifiedData) {
+        let data = modifyData(modifiedData);
         if(data == "success") {
-            commit('modifySuccess', true);
-            commit('initSingleData');
+            context.dispatch('initSingleDataRequest');
+            context.commit('modifiedMovieData', modifiedData);
         }
-    },
-    setModifySuccessRequest({commit}, payload) {
-        commit('modifySuccess', payload);
     },
 }
 
 export default {
     namespaced: true,
     state,
+    getters,
     actions,
     mutations,
 }

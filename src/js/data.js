@@ -66,6 +66,8 @@ const fetchData = (data) => {
 }
 
 
+
+
 const saveData = (formData) => {
     //id (유니크 값) 만들기
     function getUUID() { // UUID v4 generator in JavaScript (RFC4122 compliant)
@@ -95,7 +97,7 @@ const saveData = (formData) => {
     //전체 데이터 개수 올리기
     totalData++;
 
-    return "success";
+    return {result : "success", id : id };
 }
 
 const deleteData = (id) => {

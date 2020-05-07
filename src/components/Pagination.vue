@@ -48,37 +48,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-
 export default {
-    data() {
-        return {
-            totalPage : 0,
-            displayPageArray : [], //실제 보여주는 페이지 범위
-            hasMorePage : false, //더보기 버튼 여부
-            hasPrevPage : false, //이전 더보기 버튼 여부
-            pageRange : [], //[startPage, endPage] 배열
-        }
-    },
-    created() {
-        this.setTotalPage();
-        this.chagePageAndSetPagination(this.currentPageIndex);
-    },
-    mounted() {
-        console.log('pagenation mounted!!');
-    },
     computed : {
         currentPageIndex : {
             get() { return this.$store.state.page.currentPageIndex },
             set(value) {  return this.$store.commit('page/currentPageIndex', value) },
         },
-        ...mapState('page', {
-            pageCountChanged : state => state.pageCountChanged,
-        }),
-        ...mapState('movieData', {
-            totalData : state => state.totalData,
-            addDataSuccess : state => state.addDataSuccess,
-        }),
         pageOption : {
             get() {
                 return this.$store.getters['page/getPageOption']
@@ -87,103 +62,84 @@ export default {
                 return this.$store.dispatch('page/setPageOptionRequest', newVal);
             }
         },
-    },
-    watch : {
+        totalPage : {
+            get() {
+                return this.$store.getters['page/getTotalPage']
+            },
+            set(newVal) {
+                return this.$store.dispatch('page/setTotalPageRequest', newVal);
+            }
+        },
+        pageRange : {
+            get() {
+                return this.$store.getters['page/getPageRange']
+            },
+            set(newVal) {
+                return this.$store.dispatch('page/setPageRange', newVal);
+            }
+        },
         displayPageArray : {
-            handler(newVal, oldVal) {
-                //이전 페이지로 바꾸는 버튼 활성화
-                if(oldVal.length != 0 && newVal.length) {
-                    this.hasPrevPage = true;
-                }
-                if(newVal[0] === 1) {
-                    this.hasPrevPage = false;
-                }
+            get() {
+                return this.$store.getters['page/getDisplayPageArray']
+            },
+            set(newVal) {
+                return this.$store.dispatch('page/setDisplayPageArray', newVal);
             }
         },
-        pageCountChanged : {
-            immediate : true,
-            deep : true,
-            handler(newVal) {
-                if(newVal) {
-                    this.setTotalPage();
-                    this.chagePageAndSetPagination(this.currentPageIndex);
-                    this.pageCountChangeRequest(false);
-                    return;
-                }
+        hasMorePage : {
+            get() {
+                return this.$store.getters['page/getHasMorePage']
+            },
+            set(newVal) {
+                return this.$store.commit('page/setHasMorePage', newVal);
             }
         },
+        hasPrevPage : {
+            get() {
+                return this.$store.getters['page/getHasPrevPage']
+            },
+            set(newVal) {
+                return this.$store.commit('page/setHasPrevPage', newVal);
+            }
+        }
     },
     methods: {
-        ...mapActions('page', [
-            'pageCountChangeRequest',
-            'pageChangeRequest',
-        ]),
-        //페이징 범위 처리하는 함수
-        setPagination(startPage) {
-            this.displayPageArray = []; 
-            for(let i = 0; i < this.pageOption.pageCount; i++) {
-                let pageIndex = startPage + i;
-                if(pageIndex > this.totalPage) {
-                    break;
-                }
-                this.displayPageArray.push(pageIndex);
+        //페이징 처리 함수
+        setPaginationAction() {
+            let payload = {
+                currentPageIndex : this.currentPageIndex,
+                pageOption : this.pageOption
             }
-            if(this.totalPage > this.displayPageArray[this.displayPageArray.length -1 ]) {
-                this.hasMorePage = true;
-            }
-            if(this.totalPage === this.displayPageArray[this.displayPageArray.length -1 ]) {
-                this.hasMorePage = false;
-            }
-        },
-        //startPage, endPage 구해서 pageRange 배열 만드는 함수
-        setPageRange(currentPageIndex) {
-            this.pageRange = [];
-            let endPage = (Math.ceil(currentPageIndex / this.pageOption.pageCount) * this.pageOption.pageCount);
-            let startPage = (endPage - this.pageOption.pageCount)+1;
-            if(endPage > this.totalPage) {
-                endPage = this.totalPage;
-            }
-            if(this.totalPage < 1 || this.totalPage == 1) {
-                startPage = endPage;
-            }
-            this.pageRange.push(startPage, endPage);
-        },
-        chagePageAndSetPagination(currentPageIndex) {
-            this.setPageRange(currentPageIndex);
-            this.setPagination(this.pageRange[0]);
-            this.pageChangeRequest(true); //페이지가 변경되었음을 알림
-        },
-        setTotalPage() {
-            this.totalPage = Math.ceil(this.totalData/this.pageOption.dataPerPage);
+            this.$store.dispatch('page/chagePageAndSetPagination', payload);
         },
         //click 이벤트 함수
         changePage(pageIndex) {
             this.currentPageIndex = pageIndex; //현재 페이지 상태를 변경해줌
-            this.chagePageAndSetPagination(this.currentPageIndex);
+            this.setPaginationAction();
         },
         firstPage() {
             this.currentPageIndex = 1;
-            this.chagePageAndSetPagination(this.currentPageIndex);
+            this.setPaginationAction();
         },
         prevPage() {
             this.currentPageIndex--;
-            this.chagePageAndSetPagination(this.currentPageIndex);
+            this.setPaginationAction();
         },
         nextPage() {
             this.currentPageIndex++;
-            this.chagePageAndSetPagination(this.currentPageIndex);
+            this.setPaginationAction();
         },
         lastPage() {
             this.currentPageIndex = this.totalPage;
-            this.chagePageAndSetPagination(this.currentPageIndex);
+            this.setPaginationAction();
         },
         loadMorePage() {
             this.currentPageIndex = this.pageRange[1] + 1;
-            this.chagePageAndSetPagination(this.currentPageIndex);
+            this.setPaginationAction();
         },
         loadPrevPage() {
             this.currentPageIndex = this.pageRange[0] - this.pageOption.pageCount;
-            this.chagePageAndSetPagination(this.currentPageIndex);
+            this.setPaginationAction();
         },
     }
 }

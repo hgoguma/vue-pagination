@@ -9,13 +9,13 @@ const mutations = {
 }
 
 const actions = {
-    showModalRequest({commit, dispatch}, payload) {
-        commit('modalVisible', true); //state 변경
+    showModalRequest(context, movieId) {
+        context.commit('modalVisible', true); //state 변경
         //payload(movieId)로 API에서 데이터 호출하는 action 호출
-        dispatch('movieData/getMovieDataRequest', payload, {root:true});
+        context.dispatch('movieData/getMovieDataRequest', movieId, {root : true} );
     },
-    closeModalRequest({commit}) {
-        commit('modalVisible', false);
+    closeModalRequest(context) {
+        context.commit('modalVisible', false);
     }
 }
 
