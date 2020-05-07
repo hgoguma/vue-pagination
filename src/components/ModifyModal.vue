@@ -4,7 +4,7 @@
         v-model="modalVisible"
         ok-title="수정"
         cancel-title="취소"
-        @ok="submitModalForm($event)"
+        @ok="submitModalForm()"
     >
         <form>
             <b-form-group label="한글 타이틀" label-for="title">
@@ -18,7 +18,8 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapState } from 'vuex';
+const { modifyData } = require('../js/data.js');
 
 export default {
     computed : {
@@ -32,24 +33,21 @@ export default {
         }
     },
     methods : {
-        ...mapActions('movieData', [
-            'modifyDataRequest',
-            'initSingleDataRequest',
-        ]),
-        ...mapActions('modal', [
-            'closeModalRequest',
-        ]),
-        submitModalForm($event) {
-            $event.preventDefault();
+        submitModalForm() {
             //공백 처리
             if(!this.singleData.title || !this.singleData.original_title) {
                 alert('입력해주세요');
                 return;
             }
-            this.modifyDataRequest(this.singleData); //action!
-            alert('수정 되었습니다.');
-            this.initSingleDataRequest(); //singleData state 초기화
-            this.closeModalRequest(); //창 닫기
+            let result = modifyData(this.singleData);
+            if(result == "success") {
+                alert('수정 되었습니다.');
+                this.$store.dispatch('modal/closeModal');
+                this.$emit('renderingPage');
+            }
+            
+            //this.$store.dispatch('movieData/modifyDataAction', this.singleData)
+            
         },
     }
 }

@@ -10,7 +10,7 @@
     </b-container>
 </template>
 <script>
-import { mapActions } from 'vuex';
+const { saveData } = require('../js/data.js');
 
 export default {
     data() {
@@ -22,16 +22,17 @@ export default {
         }
     },
     methods: {
-        ...mapActions('movieData', [
-            'addDataRequest',
-        ]),
         submitForm() {
             //공백 처리
             if(!this.form.title || !this.form.original_title) {
                 alert('입력해주세요');
                 return;
             }
-            this.addDataRequest(this.form);
+            //this.$store.dispatch('movieData/addData', this.form);
+            let result = saveData(this.form);
+            if(result.result == "success" && result.id) {
+                this.$emit('renderingPage');
+            }
             this.form = {};
         }
     }

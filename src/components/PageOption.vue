@@ -24,12 +24,6 @@
 </template>
 <script>
 export default {
-    created() {
-        //this.$store.dispatch('page/setPageOptionRequest', this.pageOption);
-    },
-    // beforeUpdate() {
-    //     this.$store.dispatch('page/setPageOptionRequest', this.pageOption);
-    // },
     data() {
         return {
             // pageOption : {
@@ -55,7 +49,7 @@ export default {
                 return this.$store.getters['page/getPageOption']
             },
             set(newVal) {
-                return this.$store.dispatch('page/setPageOptionRequest', newVal);
+                return this.$store.dispatch('page/setPageOption', newVal);
             }
         },
     },
@@ -66,7 +60,7 @@ export default {
                 alert('숫자를 입력해주세요');
                 return;
             }
-            this.$store.dispatch('page/setPageOptionRequest', this.pageOption); //pageOption state 바꾸기
+            this.$store.dispatch('page/setPageOption', this.pageOption); //pageOption state 바꾸기
             this.$emit('renderingPage');
         },
         checkValue($event) {

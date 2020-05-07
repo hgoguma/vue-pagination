@@ -20,6 +20,8 @@
 </template>
 
 <script>
+const { deleteData } = require('../js/data.js');
+
 export default {
     data () {
         return {
@@ -39,19 +41,22 @@ export default {
                 return this.$store.getters['page/getPageOption']
             },
             set(newVal) {
-                return this.$store.dispatch('page/setPageOptionRequest', newVal);
+                return this.$store.dispatch('page/setPageOption', newVal);
             }
         },
     },
     methods: {
         onclickDelete(id) {
-            this.$store.dispatch('movieData/deleteDataRequest', id);
-            alert('삭제 되었습니다.');
+            let result = deleteData(id); //api 가서 삭제
+            if(result === "success") {
+                alert('삭제 되었습니다.');
+                this.$emit('renderingPage');
+            }
         },
         onClickModify(movieId) {
             this.movieId = movieId;
             //modalVisible state 바꾸기
-            this.$store.dispatch('modal/showModalRequest', movieId);
+            this.$store.dispatch('modal/showModal', movieId);
         },
     }
 }

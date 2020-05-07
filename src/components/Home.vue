@@ -7,16 +7,16 @@
         <PageOption @renderingPage="renderingPage"  />
           
         <!-- 추가 -->
-        <Form />
+        <Form @renderingPage="renderingPage" />
 
         <!-- 영화 리스트 -->
-        <List />
+        <List @renderingPage="renderingPage" />
         
         <!-- 페이징 처리 -->
         <Pagination @renderingPage="renderingPage" />
 
         <!-- 수정 모달창 --> 
-        <ModifyModal />
+        <ModifyModal @renderingPage="renderingPage" />
     </div>
 </template>
 
@@ -50,8 +50,16 @@ export default {
         return this.$store.getters['page/getPageOption']
       },
       set(newVal) {
-        return this.$store.dispatch('page/setPageOptionRequest', newVal);
+        return this.$store.dispatch('page/setPageOption', newVal);
       }
+    },
+    totalData: {
+      get() {
+        return this.$store.getters['movieData/getTotalData']
+      },
+      // set(newVal) {
+      //   return this.$store.dispatch('page/setPageOption', newVal);
+      // }
     },
   },
   methods: {
@@ -61,7 +69,7 @@ export default {
         currentPageIndex : this.currentPageIndex,
         pageOption : this.pageOption
       }
-      this.$store.dispatch('movieData/setDataRequest', option);
+      this.$store.dispatch('movieData/setData', option);
     },
     //페이징처리
     setPaginationAction() {

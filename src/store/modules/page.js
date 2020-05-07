@@ -93,19 +93,19 @@ const actions = {
         context.commit('initPageRange');
     },
 
-    setPageOptionRequest(context, pageOption) {
+    setPageOption(context, pageOption) {
         context.dispatch('initCurrentPageIndex');
         context.commit('setPageOption', pageOption);
     },
     
     //총 데이터 개수 구하기
-    setTotalPageRequest(context, pageOption) {
+    setTotalPage(context, pageOption) {
         let totalPage = Math.ceil(context.rootState.movieData.totalData/pageOption.dataPerPage);
         context.commit('setTotalPage', totalPage);
     },
 
     chagePageAndSetPagination(context, payload) {
-        context.dispatch('setTotalPageRequest', payload.pageOption);
+        context.dispatch('setTotalPage', payload.pageOption);
         context.dispatch('setPageRange', payload.currentPageIndex);
         let startPage = context.state.pageRange[0];
         context.dispatch('setPagination',startPage);

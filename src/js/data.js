@@ -102,7 +102,8 @@ const saveData = (formData) => {
 
 const deleteData = (id) => {
     //for문 돌면서 id값이랑 일치하는 거 찾아서 배열에서 삭제
-    newArray = newArray.filter(element => element.id !== id);
+    let index = newArray.findIndex( element => element.id === id); //해당되는 배열의 index 가져오기
+    newArray.splice(index,1);
     totalData--;
 
     return "success";
